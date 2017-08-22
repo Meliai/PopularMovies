@@ -41,6 +41,6 @@ public class MovieDetailsActivity extends BaseActivity {
         mRate.setText(String.format(getString(R.string.rate),String.valueOf(movieItem.getVote_average())));
         mOverview.setText(movieItem.getOverview());
         mReleaseDate.setText(movieItem.getRelease_date().substring(0, 4));
-        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).into(mPoster);
+        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).into(mPoster);
     }
 }

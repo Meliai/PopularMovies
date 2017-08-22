@@ -27,7 +27,7 @@
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="wrap_content"
+            android:layout_width="185dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space16"
             android:layout_marginTop="@dimen/space16"
@@ -72,7 +72,7 @@
             tools:text="Overview" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_margin="@dimen/space16"
             android:background="@color/colorPrimaryDark"

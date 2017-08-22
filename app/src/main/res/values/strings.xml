@@ -3,7 +3,8 @@
 
     <!--Screens-->
     <string name="title_details">Movie Detail</string>
-    <string name="sort">Sort</string>
+    <string name="sort_popular">Popular Video</string>
+    <string name="sort_top">Top Rate</string>
     <string name="rate" formatted="false">%s/10</string>
 
 
