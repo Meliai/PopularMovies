@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Margins/Paddings-->
+    <dimen name="space32">32dp</dimen>
+    <dimen name="space16">16dp</dimen>
+
+    <!--TextSizes-->
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+</resources>

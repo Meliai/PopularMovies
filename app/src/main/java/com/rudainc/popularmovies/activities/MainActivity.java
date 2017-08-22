@@ -26,7 +26,6 @@ import java.util.List;
 public class MainActivity extends BaseActivity  implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     private RecyclerView rvMovies;
-    private List<MovieItem> posters;
     private MoviesAdapter mMoviesAdapter;
 
     @Override
