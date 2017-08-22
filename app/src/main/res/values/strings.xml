@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <string name="base_url">http://api.themoviedb.org/3</string>
+    <string name="base_img_url">http://image.tmdb.org/t/p/</string>
+    <string name="img_size">w185</string>
+    <string name="endpoint_popular_movies">/movie/popular</string>
+    <string name="endpoint_top_rated">/movie/top_rated</string>
+    <string name="my_tmdb_key">1ccf9bd7d6bd3dff076ac0c2c5114610</string>
+
+
+    <string name="sort">Sort</string>
+
+    <!--Content Description-->
+    <string name="movie_poster">Movie Poster</string>
 </resources>
