@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorCyan"
             android:padding="@dimen/space32"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_24"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"

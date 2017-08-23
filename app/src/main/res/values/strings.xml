@@ -7,7 +7,8 @@
     <string name="sort_top">Top Rate</string>
     <string name="rate" formatted="false">%s/10</string>
 
-
+    <!--Errors-->
+    <string name="no_connection">No internet connection</string>
     <!--Content Description-->
     <string name="movie_poster">Movie Poster</string>
 </resources>

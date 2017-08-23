@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rudainc.popularmovies.R;
+import com.rudainc.popularmovies.SpacesItemDecoration;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.MoviesDBJsonUtils;
@@ -20,10 +22,20 @@ import com.rudainc.popularmovies.network.NetworkUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static android.provider.CalendarContract.Instances.END;
+import static com.rudainc.popularmovies.R.id.action_sort_popular;
+
 public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
+    private static final String MOVIE_DATA = "movie_data";
+    private static final String MENU_ITEM_CHECKED = "menu_item_checked";
     private RecyclerView rvMovies;
     private MoviesAdapter mMoviesAdapter;
+
+    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
+    private Menu mMenu;
+    private String endpoint;
+    private int menu_item_checked = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +45,15 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         rvMovies = (RecyclerView) findViewById(R.id.rv_movies);
 
         rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
+        int spacingInPixels = 0;
+        rvMovies.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
-
-        new MoviesPosterTask().execute("popular");
+        if (savedInstanceState != null) {
+            callAsync(savedInstanceState.getString(MOVIE_DATA));
+            menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
+        } else
+            callAsync("popular");
     }
 
     @Override
@@ -46,7 +63,54 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         startActivity(intent);
     }
 
-    public class MoviesPosterTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        mMenu = menu;
+        if (menu_item_checked == -1){
+            return true;
+        }else{
+            resetMenuItems();
+            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
+            menuItem.setChecked(true);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+        menu_item_checked = itemThatWasClickedId;
+        resetMenuItems();
+        if (itemThatWasClickedId == action_sort_popular) {
+            item.setChecked(true);
+            callAsync("popular");
+            return true;
+        } else if (itemThatWasClickedId == R.id.action_sort_top) {
+            item.setChecked(true);
+            callAsync("top_rated");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void resetMenuItems() {
+        for (int i = 0; i < mMenu.size(); i++)
+            mMenu.getItem(i).setChecked(false);
+    }
+
+    private void callAsync(String url_endpoint) {
+        endpoint = url_endpoint;
+
+        if (isOnline(this))
+            new MoviesPosterTask().execute(endpoint);
+        else
+            showSnackBar(getString(R.string.no_connection));
+    }
+
+    private class MoviesPosterTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
 
         @Override
         protected void onPreExecute() {
@@ -60,11 +124,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
             try {
                 String jsonMoviesResponse = NetworkUtils
-                        .getResponseFromHttpUrl(new URL(Uri.parse("http://api.themoviedb.org/3/movie/"+url_endpoint+"?api_key=1ccf9bd7d6bd3dff076ac0c2c5114610").toString()));
+                        .getResponseFromHttpUrl(new URL(Uri.parse("http://api.themoviedb.org/3/movie/" + url_endpoint + "?api_key=" + API_KEY).toString()));
 
                 return MoviesDBJsonUtils.getMoviesFromJson(MainActivity.this, jsonMoviesResponse);
 
             } catch (Exception e) {
+                showSnackBar(e.getMessage());
                 e.printStackTrace();
                 return null;
             }
@@ -78,23 +143,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         }
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(MOVIE_DATA, endpoint);
+        outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_sort_popular) {
-            new MoviesPosterTask().execute("popular");
-            return true;
-        }else if (itemThatWasClickedId == R.id.action_sort_top) {
-            new MoviesPosterTask().execute("top_rated");
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

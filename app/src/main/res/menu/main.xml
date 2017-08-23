@@ -4,9 +4,14 @@
     <item
         android:id="@+id/action_sort_popular"
         android:orderInCategory="1"
-        android:title="@string/sort_popular"/>
+        android:title="@string/sort_popular"
+        android:checkable="true"
+        android:checked="true"/>
     <item
         android:id="@+id/action_sort_top"
         android:orderInCategory="1"
-        android:title="@string/sort_top"/>
+        android:title="@string/sort_top"
+        android:checkable="true"
+        android:saveEnabled="true"
+       />
 </menu>
