@@ -1,19 +1,15 @@
 package com.rudainc.popularmovies.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.rudainc.popularmovies.R;
-import com.rudainc.popularmovies.SpacesItemDecoration;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.MoviesDBJsonUtils;
@@ -22,7 +18,6 @@ import com.rudainc.popularmovies.network.NetworkUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static android.provider.CalendarContract.Instances.END;
 import static com.rudainc.popularmovies.R.id.action_sort_popular;
 
 public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
@@ -32,7 +27,9 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private RecyclerView rvMovies;
     private MoviesAdapter mMoviesAdapter;
 
-    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
+    // Put your API key here! =)
+    final private String API_KEY = "YOUR KEY";
+
     private Menu mMenu;
     private String endpoint;
     private int menu_item_checked = -1;
@@ -45,8 +42,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         rvMovies = (RecyclerView) findViewById(R.id.rv_movies);
 
         rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
-        int spacingInPixels = 0;
-        rvMovies.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
