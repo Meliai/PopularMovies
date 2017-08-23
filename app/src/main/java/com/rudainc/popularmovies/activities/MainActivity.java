@@ -1,6 +1,7 @@
 package com.rudainc.popularmovies.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private MoviesAdapter mMoviesAdapter;
 
     // Put your API key here! =)
-    final private String API_KEY = "YOUR KEY";
+    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
 
     private Menu mMenu;
     private String endpoint;
@@ -40,8 +41,13 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         setContentView(R.layout.activity_main);
 
         rvMovies = (RecyclerView) findViewById(R.id.rv_movies);
-
-        rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
+        }
+        else{
+            rvMovies.setLayoutManager(new GridLayoutManager(this, 3));
+        }
+//        rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
@@ -102,7 +108,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         if (isOnline(this))
             new MoviesPosterTask().execute(endpoint);
         else
-            showSnackBar(getString(R.string.no_connection));
+            showSnackBar(getString(R.string.smth_went_wrong));
     }
 
     private class MoviesPosterTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
@@ -134,7 +140,8 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         protected void onPostExecute(ArrayList<MovieItem> moviesData) {
             if (moviesData != null) {
                 mMoviesAdapter.setMoviesData(moviesData);
-            }
+            }else
+                showSnackBar(getString(R.string.smth_went_wrong));
         }
     }
 

@@ -8,7 +8,7 @@
     <string name="rate" formatted="false">%s/10</string>
 
     <!--Errors-->
-    <string name="no_connection">No internet connection</string>
+    <string name="smth_went_wrong">Something went wrong, please check your internet connection and try again!</string>
     <!--Content Description-->
     <string name="movie_poster">Movie Poster</string>
 </resources>
