@@ -6,6 +6,7 @@
     <string name="sort_popular">Popular Video</string>
     <string name="sort_top">Top Rate</string>
     <string name="rate" formatted="false">%s/10</string>
+    <string name="trailer">Trailers</string>
 
     <!--Errors-->
     <string name="smth_went_wrong">Something went wrong, please check your internet connection and try again!</string>

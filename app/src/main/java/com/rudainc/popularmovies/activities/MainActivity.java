@@ -2,8 +2,6 @@ package com.rudainc.popularmovies.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,42 +10,42 @@ import android.view.MenuItem;
 
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
+import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
-import com.rudainc.popularmovies.network.MoviesDBJsonUtils;
-import com.rudainc.popularmovies.network.NetworkUtils;
+import com.rudainc.popularmovies.network.async.MovieListAsync;
 
-import java.net.URL;
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.rudainc.popularmovies.R.id.action_sort_popular;
 
-public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, OnMoviesUploadCompleted {
 
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
-    private RecyclerView rvMovies;
+
+    @BindView(R.id.rv_movies)
+    RecyclerView rvMovies;
+
     private MoviesAdapter mMoviesAdapter;
-
-    // Put your API key here! =)
-    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
-
     private Menu mMenu;
     private String endpoint;
     private int menu_item_checked = -1;
+    private MovieListAsync movieListAsync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        rvMovies = (RecyclerView) findViewById(R.id.rv_movies);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        ButterKnife.bind(this);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
-        }
-        else{
+        } else {
             rvMovies.setLayoutManager(new GridLayoutManager(this, 3));
         }
-//        rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
+
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
@@ -68,9 +66,9 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         mMenu = menu;
-        if (menu_item_checked == -1){
+        if (menu_item_checked == -1) {
             return true;
-        }else{
+        } else {
             resetMenuItems();
             MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
             menuItem.setChecked(true);
@@ -105,44 +103,24 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private void callAsync(String url_endpoint) {
         endpoint = url_endpoint;
 
-        if (isOnline(this))
-            new MoviesPosterTask().execute(endpoint);
-        else
+        if (isOnline(this)) {
+            movieListAsync = new MovieListAsync(this, url_endpoint, this);
+            movieListAsync.execute();
+        } else
             showSnackBar(getString(R.string.smth_went_wrong));
     }
 
-    private class MoviesPosterTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
+    @Override
+    public void onMoviesUploadCompleted(ArrayList<MovieItem> moviesData) {
+        if (moviesData != null) {
+            mMoviesAdapter.setMoviesData(moviesData);
+        } else
+            showSnackBar(getString(R.string.smth_went_wrong));
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected ArrayList<MovieItem> doInBackground(String... params) {
-            String url_endpoint = params[0];
-
-            try {
-                String jsonMoviesResponse = NetworkUtils
-                        .getResponseFromHttpUrl(new URL(Uri.parse("http://api.themoviedb.org/3/movie/" + url_endpoint + "?api_key=" + API_KEY).toString()));
-
-                return MoviesDBJsonUtils.getMoviesFromJson(MainActivity.this, jsonMoviesResponse);
-
-            } catch (Exception e) {
-                showSnackBar(e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieItem> moviesData) {
-            if (moviesData != null) {
-                mMoviesAdapter.setMoviesData(moviesData);
-            }else
-                showSnackBar(getString(R.string.smth_went_wrong));
-        }
+    @Override
+    public void onMoviesUploadError(String message) {
+        showSnackBar(message);
     }
 
     @Override
@@ -151,6 +129,4 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         outState.putString(MOVIE_DATA, endpoint);
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
     }
-
-
 }

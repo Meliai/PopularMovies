@@ -26,7 +26,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
 
-    public MoviesAdapter(Context context,MoviesAdapterOnClickHandler clickHandler) {
+    public MoviesAdapter(Context context, MoviesAdapterOnClickHandler clickHandler) {
         this.context = context;
         mClickHandler = clickHandler;
     }
@@ -52,7 +52,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.movies_list_item;
+        int layoutIdForListItem = R.layout.item_movie;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
@@ -63,7 +63,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder moviesAdapterViewHolder, int position) {
         MovieItem movieItem = mMoviesData.get(position);
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w500/"+movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).into(moviesAdapterViewHolder.mPoster);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).into(moviesAdapterViewHolder.mPoster);
     }
 
     @Override

@@ -3,9 +3,14 @@
     <!--Margins/Paddings-->
     <dimen name="space32">32dp</dimen>
     <dimen name="space16">16dp</dimen>
+    <dimen name="space8">8dp</dimen>
 
     <!--TextSizes-->
     <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
+
+    <!--Images-->
+    <dimen name="icons_24">24dp</dimen>
 </resources>

@@ -3,6 +3,8 @@ package com.rudainc.popularmovies.activities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +12,11 @@ import android.view.View;
 
 import com.rudainc.popularmovies.R;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity extends AppCompatActivity {
     private View mCustomSnackBarView;
+
 
     private Snackbar initSnackBar(String message) {
         View snackBarParent = null;
@@ -22,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (snackBarParent != null) {
             Snackbar snackbar = Snackbar.make(snackBarParent, message, Snackbar.LENGTH_SHORT).setActionTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this,R.color.colorRed));
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorRed));
 
             return snackbar;
         }
