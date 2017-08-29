@@ -79,7 +79,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_details));
 
-       movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
+        movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
 
         fillData(movieItem);
 
