@@ -2,20 +2,24 @@
     <string name="app_name">Popular Movies</string>
 
     <!--Screens-->
-    <string name="sort_popular">Popular Video</string>
     <string name="title_details">Movie Detail</string>
     <string name="title_reviews">Movie Reviews</string>
     <string name="sort_top">Top Rate</string>
+    <string name="sort_popular">Popular Video</string>
+    <string name="favorite">Favorites</string>
     <string name="rate" formatted="false">%s/10</string>
     <string name="trailer">Trailers</string>
     <string name="no_trailers">No trailers =(</string>
     <string name="cant_upload_data">Unfortunately, we can\'t upload data, check internet connection.</string>
     <string name="no_reviews">No reviews =(</string>
     <string name="show_reviews">Show Reviews</string>
+    <string name="favorite_added">Movie Added to favorites</string>
+    <string name="favorite_removed">Movie Removed from favorites</string>
 
 
     <!--Errors-->
     <string name="smth_went_wrong">Something went wrong, please check your internet connection and try again!</string>
+
     <!--Content Description-->
     <string name="movie_poster">Movie Poster</string>
 </resources>

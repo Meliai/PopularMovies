@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted{
+public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted {
 
     @BindView(R.id.rv)
     RecyclerView rvReviews;
@@ -30,6 +30,8 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
 
     private GetReviewsAsync getReviewsAsync;
 
+    private static final String EXTRA_DATA = "data";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_reviews));
 
-        MovieItem movieItem = (MovieItem) getIntent().getSerializableExtra("data");
+        MovieItem movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
 
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         mReviewsAdapter = new ReviewsAdapter(this);
@@ -47,7 +49,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
             getReviewsAsync = new GetReviewsAsync(this, movieItem.getId(), this);
             getReviewsAsync.execute();
         } else
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong), true);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
                 setNoReviewsUI(getResources().getString(R.string.no_reviews));
             mReviewsAdapter.setReviewsData(reviewData);
         } else {
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong), true);
             setNoReviewsUI(getResources().getString(R.string.cant_upload_data));
         }
     }
@@ -70,7 +72,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
 
     @Override
     public void onMovieReviewsError(String message) {
-        showSnackBar(message);
+        showSnackBar(message, true);
         setNoReviewsUI(getResources().getString(R.string.cant_upload_data));
     }
 }

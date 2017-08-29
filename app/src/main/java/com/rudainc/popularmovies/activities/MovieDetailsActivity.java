@@ -9,6 +9,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.R.id.message;
+import static com.rudainc.popularmovies.R.id.action_favorite;
+import static com.rudainc.popularmovies.R.id.action_sort_popular;
 
 public class MovieDetailsActivity extends BaseActivity implements TrailersAdapter.TrailersAdapterOnClickHandler, OnMovieTrailersCompleted {
 
@@ -56,10 +60,12 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
 
     private MovieItem movieItem;
 
+    private static final String EXTRA_DATA = "data";
+
     @OnClick(R.id.show_reviews)
     void showReviews() {
         Intent intent = new Intent(MovieDetailsActivity.this, ReviewsActivity.class);
-        intent.putExtra("data", movieItem);
+        intent.putExtra(EXTRA_DATA, movieItem);
         startActivity(intent);
     }
 
@@ -73,7 +79,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_details));
 
-       movieItem = (MovieItem) getIntent().getSerializableExtra("data");
+       movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
 
         fillData(movieItem);
 
@@ -85,7 +91,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
             getTrailerAsync = new GetTrailerAsync(this, movieItem.getId(), this);
             getTrailerAsync.execute();
         } else
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong),true);
     }
 
     private void fillData(MovieItem movieItem) {
@@ -94,6 +100,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         mOverview.setText(movieItem.getOverview());
         mReleaseDate.setText(movieItem.getRelease_date().substring(0, 4));
         Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).into(mPoster);
+
     }
 
 
@@ -104,7 +111,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
                 setNoTrailerUI(getResources().getString(R.string.no_trailers));
             mTrailerAdapter.setTrailerData(trailerData);
         } else {
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong),true);
             setNoTrailerUI(getResources().getString(R.string.cant_upload_data));
         }
     }
@@ -117,7 +124,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
 
     @Override
     public void onMovieTrailersError(String message) {
-        showSnackBar(message);
+        showSnackBar(message,true);
         setNoTrailerUI(getResources().getString(R.string.cant_upload_data));
     }
 
@@ -133,4 +140,35 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details, menu);
+        if(checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+            MenuItem menuItem = (MenuItem) menu.getItem(0);
+            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+
+        if (itemThatWasClickedId == action_favorite) {
+            if(!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))){
+                addMovie(movieItem);
+                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
+                showSnackBar(getResources().getString(R.string.favorite_added),false);
+            }else {
+                removeMovie(String.valueOf(movieItem.getId()));
+                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
+                showSnackBar(getResources().getString(R.string.favorite_removed),false);
+            }
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

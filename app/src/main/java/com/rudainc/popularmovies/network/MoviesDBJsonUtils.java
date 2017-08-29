@@ -49,21 +49,21 @@ public class MoviesDBJsonUtils {
         parsedMovieData = new ArrayList<>();
 
         for (int i = 0; i < moviesArray.length(); i++) {
-            int id;
+            String id;
             String poster_path;
             String original_title;
             String overview;
-            double vote_average;
+            String vote_average;
             String release_date;
 
             JSONObject movieObject = moviesArray.getJSONObject(i);
 
-            id = movieObject.getInt("id");
+            id = movieObject.getString("id");
             original_title = movieObject.getString("original_title");
             poster_path = movieObject.getString("poster_path");
             overview = movieObject.getString("overview");
             release_date = movieObject.getString("release_date");
-            vote_average = movieObject.getDouble("vote_average");
+            vote_average = movieObject.getString("vote_average");
 
             parsedMovieData.add(i, new MovieItem(id, original_title, poster_path, overview, vote_average, release_date));
         }

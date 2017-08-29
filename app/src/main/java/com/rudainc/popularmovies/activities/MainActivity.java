@@ -2,6 +2,7 @@ package com.rudainc.popularmovies.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,11 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
+    private static final String EXTRA_DATA = "data";
+
+    private static final String FAVORITES = "favorites";
+    private static final String POPULAR = "popular";
+    private static final String TOP_RATED = "top_rated";
 
     @BindView(R.id.rv)
     RecyclerView rvMovies;
@@ -32,6 +38,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private MoviesAdapter mMoviesAdapter;
     private Menu mMenu;
     private String endpoint;
+
     private int menu_item_checked = -1;
     private MovieListAsync movieListAsync;
 
@@ -49,16 +56,21 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
-            callAsync(savedInstanceState.getString(MOVIE_DATA));
             menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
+            if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
+                mMoviesAdapter.setMoviesData(getAllFavoritesMovies());
+                endpoint = FAVORITES;
+            }else
+                callAsync(savedInstanceState.getString(MOVIE_DATA));
+
         } else
-            callAsync("popular");
+            callAsync(POPULAR);
     }
 
     @Override
     public void onClick(MovieItem movieItem) {
         Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-        intent.putExtra("data", movieItem);
+        intent.putExtra(EXTRA_DATA, movieItem);
         startActivity(intent);
     }
 
@@ -84,11 +96,16 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         resetMenuItems();
         if (itemThatWasClickedId == action_sort_popular) {
             item.setChecked(true);
-            callAsync("popular");
+            callAsync(POPULAR);
             return true;
         } else if (itemThatWasClickedId == R.id.action_sort_top) {
             item.setChecked(true);
-            callAsync("top_rated");
+            callAsync(TOP_RATED);
+            return true;
+        } else if (itemThatWasClickedId == R.id.action_favorites) {
+            endpoint = FAVORITES;
+            item.setChecked(true);
+            mMoviesAdapter.setMoviesData(getAllFavoritesMovies());
             return true;
         }
 
@@ -107,7 +124,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
             movieListAsync = new MovieListAsync(this, url_endpoint, this);
             movieListAsync.execute();
         } else
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong), true);
     }
 
     @Override
@@ -115,12 +132,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         if (moviesData != null) {
             mMoviesAdapter.setMoviesData(moviesData);
         } else
-            showSnackBar(getString(R.string.smth_went_wrong));
+            showSnackBar(getString(R.string.smth_went_wrong), true);
     }
 
     @Override
     public void onMoviesUploadError(String message) {
-        showSnackBar(message);
+        showSnackBar(message, true);
     }
 
     @Override

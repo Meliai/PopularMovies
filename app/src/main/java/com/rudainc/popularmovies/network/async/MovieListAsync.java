@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.rudainc.popularmovies.BuildConfig;
 import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.MoviesDBJsonUtils;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 
 public class MovieListAsync extends AsyncTask<Void, Void, ArrayList<MovieItem>> {
 
-    // Put your API key here! =)
-    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
+
+    final private String API_KEY = BuildConfig.API_KEY;
 
     private OnMoviesUploadCompleted listener;
     private Context context;
