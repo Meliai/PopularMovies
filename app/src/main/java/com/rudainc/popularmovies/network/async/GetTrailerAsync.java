@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class GetTrailerAsync extends AsyncTask<Void, Void, ArrayList<TrailerItem>> {
 
     // Put your API key here! =)
-    final private String API_KEY = "";
+    final private String API_KEY = "1ccf9bd7d6bd3dff076ac0c2c5114610";
 
     private OnMovieTrailersCompleted listener;
     private Context context;
@@ -55,9 +55,6 @@ public class GetTrailerAsync extends AsyncTask<Void, Void, ArrayList<TrailerItem
     @Override
     protected void onPostExecute(ArrayList<TrailerItem> moviesData) {
         listener.onMovieTrailersCompleted(moviesData);
-//        if (moviesData != null) {
-//            mMoviesAdapter.setMoviesData(moviesData);
-//        }else
-//            showSnackBar(getString(R.string.smth_went_wrong));
+
     }
 }

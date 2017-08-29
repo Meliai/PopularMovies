@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
 
-    @BindView(R.id.rv_movies)
+    @BindView(R.id.rv)
     RecyclerView rvMovies;
 
     private MoviesAdapter mMoviesAdapter;

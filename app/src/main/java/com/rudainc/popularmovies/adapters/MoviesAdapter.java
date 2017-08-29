@@ -13,11 +13,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private final Context context;
     private ArrayList<MovieItem> mMoviesData;
-
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 

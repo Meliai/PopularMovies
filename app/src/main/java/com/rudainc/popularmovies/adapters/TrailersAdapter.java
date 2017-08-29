@@ -22,8 +22,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     private final Context context;
     private ArrayList<TrailerItem> mTrailersData;
 
-    @BindView(R.id.tv_trailer_name)
-    TextView mTrailerName;
 
     private final TrailersAdapterOnClickHandler mClickHandler;
 
@@ -39,11 +37,12 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
 
     public class TrailersAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mPoster;
+
+       private TextView mTrailerName;
 
         public TrailersAdapterViewHolder(View view) {
             super(view);
-            mPoster = (ImageView) view.findViewById(R.id.iv_movie_poster);
+            mTrailerName = (TextView)view.findViewById(R.id.tv_trailer_name);
             view.setOnClickListener(this);
         }
 
@@ -51,6 +50,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             TrailerItem trailerItem = mTrailersData.get(adapterPosition);
+
             mClickHandler.onClick(trailerItem);
         }
     }
@@ -69,7 +69,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     @Override
     public void onBindViewHolder(TrailersAdapterViewHolder trailersAdapterViewHolder, int position) {
         TrailerItem trailerItem = mTrailersData.get(position);
-        mTrailerName.setText(trailerItem.getName());
+        trailersAdapterViewHolder.mTrailerName.setText(trailerItem.getName());
     }
 
     @Override
@@ -79,8 +79,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     }
 
 
-    public void setTrailerData(ArrayList<TrailerItem> moviesData) {
-        mTrailersData = moviesData;
+    public void setTrailerData(ArrayList<TrailerItem> trailerData) {
+        mTrailersData = trailerData;
         notifyDataSetChanged();
     }
 }

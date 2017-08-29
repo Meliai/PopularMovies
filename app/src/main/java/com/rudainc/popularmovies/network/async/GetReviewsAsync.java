@@ -21,9 +21,9 @@ public class GetReviewsAsync extends AsyncTask<Void, Void, ArrayList<ReviewItem>
 
     private OnMovieReviewsCompleted listener;
     private Context context;
-    private String movie_id;
+    private int movie_id;
 
-    public GetReviewsAsync(Context context, String movie_id, OnMovieReviewsCompleted listener) {
+    public GetReviewsAsync(Context context, int movie_id, OnMovieReviewsCompleted listener) {
         this.context = context;
         this.movie_id = movie_id;
         this.listener = listener;
