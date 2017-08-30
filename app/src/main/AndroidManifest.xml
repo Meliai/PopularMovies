@@ -24,6 +24,13 @@
            />
         <activity android:name=".activities.ReviewsActivity"
             />
+
+
+        <provider
+            android:name="com.rudainc.popularmovies.database.FavoritesContentProvider"
+            android:authorities="com.rudainc.popularmovies"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
