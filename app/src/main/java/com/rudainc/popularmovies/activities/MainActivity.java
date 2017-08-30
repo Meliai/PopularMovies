@@ -2,7 +2,6 @@ package com.rudainc.popularmovies.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +25,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
+    private static final String SCROLL_POSITION = "scroll_position";
     private static final String EXTRA_DATA = "data";
 
     private static final String FAVORITES = "favorites";
@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     private int menu_item_checked = -1;
     private MovieListAsync movieListAsync;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,5 +146,8 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         super.onSaveInstanceState(outState);
         outState.putString(MOVIE_DATA, endpoint);
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
+
     }
+
+
 }

@@ -79,7 +79,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_details));
 
-        movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
+        movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 
         fillData(movieItem);
 
@@ -99,7 +99,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         mRate.setText(String.format(getString(R.string.rate), String.valueOf(movieItem.getVote_average())));
         mOverview.setText(movieItem.getOverview());
         mReleaseDate.setText(movieItem.getRelease_date().substring(0, 4));
-        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).into(mPoster);
+        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(mPoster);
 
     }
 

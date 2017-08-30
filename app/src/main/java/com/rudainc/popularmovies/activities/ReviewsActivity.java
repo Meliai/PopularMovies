@@ -39,7 +39,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_reviews));
 
-        MovieItem movieItem = (MovieItem) getIntent().getSerializableExtra(EXTRA_DATA);
+        MovieItem movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         mReviewsAdapter = new ReviewsAdapter(this);
