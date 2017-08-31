@@ -5,12 +5,14 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -53,27 +55,38 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private int menu_item_checked = -1;
     private MovieListAsync movieListAsync;
     private int lastFirstVisiblePosition;
+    private LinearLayoutManager ll;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getSupportLoaderManager().initLoader(ID_LOADER, null, this);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
+            ll = new GridLayoutManager(this, 2);
+            rvMovies.setLayoutManager(ll);
         } else {
-            rvMovies.setLayoutManager(new GridLayoutManager(this, 3));
+            ll = new GridLayoutManager(this, 3);
+            rvMovies.setLayoutManager(ll);
         }
 
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
+            Log.i("ROTATE", "oncreate position" + savedInstanceState.getInt(SCROLL_POSITION));
+            final int pos = savedInstanceState.getInt(SCROLL_POSITION);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rvMovies.scrollToPosition(pos);
+                }
+            }, 200);
             menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
             if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
                 getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
                 endpoint = FAVORITES;
-            }else
+            } else
                 callAsync(savedInstanceState.getString(MOVIE_DATA));
 
         } else
@@ -160,16 +173,11 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         super.onSaveInstanceState(outState);
         outState.putString(MOVIE_DATA, endpoint);
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
-        lastFirstVisiblePosition = ((LinearLayoutManager)rvMovies.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        outState.putInt(SCROLL_POSITION,lastFirstVisiblePosition);
+        if (ll != null)
+            lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
+        Log.i("ROTATE", "position" + lastFirstVisiblePosition);
+        outState.putInt(SCROLL_POSITION, lastFirstVisiblePosition);
 
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        ((LinearLayoutManager) rvMovies.getLayoutManager()).scrollToPosition(savedInstanceState.getInt(SCROLL_POSITION));
-        lastFirstVisiblePosition = 0;
     }
 
     @Override
