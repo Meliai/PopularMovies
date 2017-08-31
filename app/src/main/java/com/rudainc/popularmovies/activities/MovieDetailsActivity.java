@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.TrailersAdapter;
+import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMovieTrailersCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.ReviewItem;
@@ -34,6 +35,7 @@ import butterknife.OnClick;
 import static android.R.id.message;
 import static com.rudainc.popularmovies.R.id.action_favorite;
 import static com.rudainc.popularmovies.R.id.action_sort_popular;
+import static java.security.AccessController.getContext;
 
 public class MovieDetailsActivity extends BaseActivity implements TrailersAdapter.TrailersAdapterOnClickHandler, OnMovieTrailersCompleted {
 
@@ -160,10 +162,12 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
                 addMovie(movieItem);
                 item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
                 showSnackBar(getResources().getString(R.string.favorite_added),false);
+
             }else {
                 removeMovie(String.valueOf(movieItem.getId()));
                 item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
                 showSnackBar(getResources().getString(R.string.favorite_removed),false);
+
             }
 
             return true;

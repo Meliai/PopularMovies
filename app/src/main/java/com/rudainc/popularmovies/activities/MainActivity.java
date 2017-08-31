@@ -2,14 +2,21 @@ package com.rudainc.popularmovies.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
+import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.async.MovieListAsync;
@@ -20,8 +27,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.rudainc.popularmovies.R.id.action_sort_popular;
+import static com.rudainc.popularmovies.R.id.rv;
 
-public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, OnMoviesUploadCompleted {
+public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, OnMoviesUploadCompleted, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
@@ -32,7 +40,10 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private static final String POPULAR = "popular";
     private static final String TOP_RATED = "top_rated";
 
-    @BindView(R.id.rv)
+    private static final int ID_LOADER = 44;
+    private int mPosition = RecyclerView.NO_POSITION;
+
+    @BindView(rv)
     RecyclerView rvMovies;
 
     private MoviesAdapter mMoviesAdapter;
@@ -41,13 +52,14 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     private int menu_item_checked = -1;
     private MovieListAsync movieListAsync;
-
+    private int lastFirstVisiblePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getSupportLoaderManager().initLoader(ID_LOADER, null, this);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             rvMovies.setLayoutManager(new GridLayoutManager(this, 2));
         } else {
@@ -59,13 +71,15 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         if (savedInstanceState != null) {
             menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
             if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
-                mMoviesAdapter.setMoviesData(getAllFavoritesMovies());
+                getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
                 endpoint = FAVORITES;
             }else
                 callAsync(savedInstanceState.getString(MOVIE_DATA));
 
         } else
             callAsync(POPULAR);
+
+
     }
 
     @Override
@@ -106,7 +120,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         } else if (itemThatWasClickedId == R.id.action_favorites) {
             endpoint = FAVORITES;
             item.setChecked(true);
-            mMoviesAdapter.setMoviesData(getAllFavoritesMovies());
+            getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
             return true;
         }
 
@@ -146,8 +160,71 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         super.onSaveInstanceState(outState);
         outState.putString(MOVIE_DATA, endpoint);
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
+        lastFirstVisiblePosition = ((LinearLayoutManager)rvMovies.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(SCROLL_POSITION,lastFirstVisiblePosition);
 
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ((LinearLayoutManager) rvMovies.getLayoutManager()).scrollToPosition(savedInstanceState.getInt(SCROLL_POSITION));
+        lastFirstVisiblePosition = 0;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+
+
+        switch (loaderId) {
+
+            case ID_LOADER:
+                /* URI for all rows of weather data in our weather table */
+                Uri movieQueryUri = FavoritesContract.MovieEntry.CONTENT_URI;
+                /* Sort order: Ascending by date */
+                String sortOrder = FavoritesContract.MovieEntry.COLUMN_MOVIE_ID + " ASC";
+                /*
+                 * A SELECTION in SQL declares which rows you'd like to return. In our case, we
+                 * want all weather data from today onwards that is stored in our weather table.
+                 * We created a handy method to do that in our WeatherEntry class.
+                 */
+
+
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        null,
+                        null,
+                        null,
+                        sortOrder);
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        mMoviesAdapter.setMoviesData(getAllFavoritesMovies(data));
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        rvMovies.smoothScrollToPosition(mPosition);
+
+    }
+
+    /**
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     * The application should at this point remove any references it has to the Loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        /*
+         * Since this Loader's data is now invalid, we need to clear the Adapter that is
+         * displaying the data.
+         */
+        mMoviesAdapter.swapCursor(null);
+    }
 
 }

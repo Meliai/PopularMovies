@@ -6,11 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.rudainc.popularmovies.R;
@@ -35,16 +40,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDb = dbHelper.getWritableDatabase();
     }
 
-    public ArrayList<MovieItem> getAllFavoritesMovies() {
-        Cursor cursor = mDb.query(
-                FavoritesContract.MovieEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavoritesContract.MovieEntry.COLUMN_MOVIE_ID
-        );
+    public ArrayList<MovieItem> getAllFavoritesMovies(Cursor cursor) {
+//        Cursor cursor = mDb.query(
+//                FavoritesContract.MovieEntry.TABLE_NAME,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null,
+//                FavoritesContract.MovieEntry.COLUMN_MOVIE_ID
+//        );
         ArrayList<MovieItem> mArrayList = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
@@ -57,6 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return mArrayList;
     }
+
+
 
 
     public void addMovie(MovieItem movieItem) {

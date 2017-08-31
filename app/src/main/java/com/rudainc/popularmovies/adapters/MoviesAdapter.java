@@ -1,6 +1,7 @@
 package com.rudainc.popularmovies.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private ArrayList<MovieItem> mMoviesData;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
+    private Cursor mCursor;
 
     public interface MoviesAdapterOnClickHandler {
         void onClick(MovieItem movieItem);
@@ -78,4 +80,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         mMoviesData = moviesData;
         notifyDataSetChanged();
     }
+
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+    }
+
 }
