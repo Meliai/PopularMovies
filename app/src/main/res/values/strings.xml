@@ -22,4 +22,10 @@
 
     <!--Content Description-->
     <string name="movie_poster">Movie Poster</string>
+
+    <!--Ads-->
+    <string name="ads">Ads</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1227764705187744/7432401889</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-1227764705187744/8176962751</string>
+    <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
 </resources>

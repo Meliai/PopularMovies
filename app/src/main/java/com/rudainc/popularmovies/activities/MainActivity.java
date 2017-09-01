@@ -16,12 +16,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
 import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.async.MovieListAsync;
+import com.rudainc.popularmovies.utils.ToastListener;
 
 import java.util.ArrayList;
 
@@ -45,7 +48,10 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private static final int ID_LOADER = 44;
     private int mPosition = RecyclerView.NO_POSITION;
 
-    @BindView(rv)
+    @BindView(R.id.my_ads_banner)
+    AdView mAdView;
+
+    @BindView(R.id.rv)
     RecyclerView rvMovies;
 
     private MoviesAdapter mMoviesAdapter;
@@ -74,7 +80,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
         if (savedInstanceState != null) {
-            Log.i("ROTATE", "oncreate position" + savedInstanceState.getInt(SCROLL_POSITION));
             final int pos = savedInstanceState.getInt(SCROLL_POSITION);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -91,6 +96,15 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
         } else
             callAsync(POPULAR);
+
+
+        loadAds();
+    }
+
+    private void loadAds(){
+        mAdView.setAdListener( new ToastListener(this));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
     }
@@ -175,7 +189,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
         if (ll != null)
             lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
-        Log.i("ROTATE", "position" + lastFirstVisiblePosition);
         outState.putInt(SCROLL_POSITION, lastFirstVisiblePosition);
 
     }

@@ -3,20 +3,28 @@ package com.rudainc.popularmovies.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.ReviewsAdapter;
 import com.rudainc.popularmovies.interfaces.OnMovieReviewsCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.ReviewItem;
 import com.rudainc.popularmovies.network.async.GetReviewsAsync;
+import com.rudainc.popularmovies.utils.ToastListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.rudainc.popularmovies.R.id.action_ads;
+import static com.rudainc.popularmovies.R.id.action_favorite;
 
 public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted {
 
@@ -30,12 +38,14 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
 
     private GetReviewsAsync getReviewsAsync;
 
+    private InterstitialAd mInterstitialAd;
+
     private static final String EXTRA_DATA = "data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_reviews));
 
@@ -50,6 +60,8 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
             getReviewsAsync.execute();
         } else
             showSnackBar(getString(R.string.smth_went_wrong), true);
+
+loadAds();
     }
 
     @Override
@@ -74,5 +86,40 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
     public void onMovieReviewsError(String message) {
         showSnackBar(message, true);
         setNoReviewsUI(getResources().getString(R.string.cant_upload_data));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.reviews, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
+
+        if (itemThatWasClickedId == action_ads) {
+            mInterstitialAd.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadAds() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdListener(new ToastListener(this) {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+
+
+            }
+
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitialAd.loadAd(adRequest);
     }
 }

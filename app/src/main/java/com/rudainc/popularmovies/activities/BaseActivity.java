@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.database.FavoritesDbHelper;
@@ -30,6 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private View mCustomSnackBarView;
 
     private SQLiteDatabase mDb;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -38,6 +41,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         FavoritesDbHelper dbHelper = new FavoritesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        MobileAds.initialize(this, getResources().getString(R.string.app_id_ads));
     }
 
     public ArrayList<MovieItem> getAllFavoritesMovies(Cursor cursor) {
