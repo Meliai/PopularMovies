@@ -5,7 +5,7 @@ import com.rudainc.popularmovies.models.MovieItem;
 import java.util.ArrayList;
 
 public interface OnMoviesUploadCompleted {
-    void onMoviesUploadCompleted(ArrayList<MovieItem> moviesData);
+    void onMoviesUploadCompleted(ArrayList<MovieItem> moviesData, boolean isFullyLoaded);
 
     void onMoviesUploadError(String message);
 }

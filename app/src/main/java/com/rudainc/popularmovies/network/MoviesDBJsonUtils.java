@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.rudainc.popularmovies.models.MovieItem;
+import com.rudainc.popularmovies.models.MoviesListData;
 import com.rudainc.popularmovies.models.ReviewItem;
 import com.rudainc.popularmovies.models.TrailerItem;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 public class MoviesDBJsonUtils {
 
-    public static ArrayList<MovieItem> getMoviesFromJson(Context context, String moviesJsonStr)
+    public static MoviesListData getMoviesFromJson(Context context, String moviesJsonStr)
             throws JSONException {
 
 
@@ -44,6 +45,9 @@ public class MoviesDBJsonUtils {
             }
         }
 
+        int page = movieJson.getInt("page");
+        int total_pages = movieJson.getInt("total_pages");
+
         JSONArray moviesArray = movieJson.getJSONArray(OWM_LIST);
 
         parsedMovieData = new ArrayList<>();
@@ -68,7 +72,7 @@ public class MoviesDBJsonUtils {
             parsedMovieData.add(i, new MovieItem(id, original_title, poster_path, overview, vote_average, release_date));
         }
 
-        return parsedMovieData;
+        return new MoviesListData(parsedMovieData, page,total_pages);
     }
 
 

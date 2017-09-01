@@ -13,6 +13,7 @@ import com.rudainc.popularmovies.models.MovieItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -20,6 +21,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     private final Context context;
     private ArrayList<MovieItem> mMoviesData;
+
+    private final List<MovieItem> items = new ArrayList<>();
 
     private final MoviesAdapterOnClickHandler mClickHandler;
     private Cursor mCursor;
@@ -86,4 +89,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         notifyDataSetChanged();
     }
 
+
+
+    public void updateMoviesList(List<MovieItem> list) {
+//        this.items.clear();
+        this.mMoviesData.addAll(list);
+        notifyDataSetChanged();
+    }
 }
