@@ -91,9 +91,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
 
-    public void updateMoviesList(List<MovieItem> list) {
+    public void updateMoviesList(ArrayList<MovieItem> list) {
         this.mMoviesData.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public ArrayList<MovieItem> getMoviesData() {
+        return mMoviesData;
     }
 
     public void clearList() {

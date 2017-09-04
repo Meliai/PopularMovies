@@ -3,8 +3,9 @@
 
 
     <!--Screens-->
-    <string name="title_details">Movie Detail</string>
+    <string name="title_details">Movie Details</string>
     <string name="title_reviews">Movie Reviews</string>
+    <string name="title_favorite">Favorite List</string>
     <string name="sort_top">Top Rate</string>
     <string name="sort_popular">Popular Video</string>
     <string name="favorite">Favorites</string>
@@ -34,5 +35,6 @@
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
+    <string name="no_favorite">Your Favorite List is empty =(</string>
 
 </resources>

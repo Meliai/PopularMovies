@@ -25,13 +25,14 @@ import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.database.FavoritesDbHelper;
 import com.rudainc.popularmovies.models.MovieItem;
+import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 
 import java.util.ArrayList;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements PopularMoviesKeys {
 
     private View mCustomSnackBarView;
 

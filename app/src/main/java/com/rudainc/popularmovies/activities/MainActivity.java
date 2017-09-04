@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,6 +26,7 @@ import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.network.BaseResponse;
 import com.rudainc.popularmovies.network.PmApiWorker;
+import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
 
 import java.util.ArrayList;
@@ -37,16 +39,6 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
-    private static final String MOVIE_DATA = "movie_data";
-    private static final String MENU_ITEM_CHECKED = "menu_item_checked";
-    private static final String SCROLL_POSITION = "scroll_position";
-    private static final String EXTRA_DATA = "data";
-
-    private static final String FAVORITES = "favorites";
-    private static final String POPULAR = "popular";
-    private static final String TOP_RATED = "top_rated";
-
-    private static final int ID_LOADER = 44;
     private int mPosition = RecyclerView.NO_POSITION;
 
     @BindView(R.id.my_ads_banner)
@@ -61,6 +53,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     private Menu mMenu;
     private String endpoint = POPULAR;
+    private ArrayList<MovieItem> movies;
 
     private int menu_item_checked = -1;
     private int lastFirstVisiblePosition;
@@ -95,11 +88,8 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
                 }
             }, 200);
             menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
-            if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
-                getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
-                endpoint = FAVORITES;
-            } else
-                getMoviesList(savedInstanceState.getString(MOVIE_DATA), "1");
+            mMoviesAdapter.updateMoviesList(savedInstanceState.<MovieItem>getParcelableArrayList(MOVIE_DATA));
+            endpoint = savedInstanceState.getString(MOVIE_ENDPOINT);
 
         } else
             getMoviesList(endpoint, "1");
@@ -116,6 +106,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
                     @Override
                     public void call(final BaseResponse baseResponse) {
                         mMoviesAdapter.updateMoviesList(baseResponse.getResults());
+                        movies = mMoviesAdapter.getMoviesData();
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -139,8 +130,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     }
 
     private void getData(int page) {
-//        if (page != 1)
-//            new Handler().post(() -> mMoviesAdapter.addPaginationFooter(null, ""));
         Log.i("PAGE", page + "");
         mScrollListener.setCurrent_page(page);
         getMoviesList(endpoint, String.valueOf(page));
@@ -150,8 +139,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         mAdView.setAdListener(new ToastListener(this));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
-
     }
 
     @Override
@@ -180,23 +167,22 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         menu_item_checked = itemThatWasClickedId;
-        resetMenuItems();
         if (itemThatWasClickedId == R.id.action_sort_popular) {
+            resetMenuItems();
             item.setChecked(true);
             mMoviesAdapter.clearList();
-           rvMovies.scrollToPosition(0);
+            rvMovies.scrollToPosition(0);
             getMoviesList(POPULAR, "1");
             return true;
         } else if (itemThatWasClickedId == R.id.action_sort_top) {
+            resetMenuItems();
             item.setChecked(true);
             mMoviesAdapter.clearList();
             rvMovies.scrollToPosition(0);
             getMoviesList(TOP_RATED, "1");
             return true;
         } else if (itemThatWasClickedId == R.id.action_favorites) {
-            endpoint = FAVORITES;
-            item.setChecked(true);
-            getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
+            startActivity(new Intent(MainActivity.this, FavoritesActivity.class));
             return true;
         }
 
@@ -212,7 +198,8 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(MOVIE_DATA, endpoint);
+        outState.putString(MOVIE_ENDPOINT, endpoint);
+        outState.putParcelableArrayList(MOVIE_DATA, movies);
         outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
         if (ll != null)
             lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
