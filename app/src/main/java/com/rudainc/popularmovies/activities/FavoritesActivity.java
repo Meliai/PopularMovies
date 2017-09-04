@@ -33,7 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class FavoritesActivity extends BaseActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
+public class FavoritesActivity extends BaseActivity implements  LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.MoviesAdapterOnClickHandler {
 
     private static final String SCROLL_POSITION = "scroll_position";
     private static final String EXTRA_DATA = "data";
@@ -152,59 +152,59 @@ public class FavoritesActivity extends BaseActivity implements  LoaderManager.Lo
 
     }
 
+    @Override
+    public void onClick(MovieItem movieItem) {
+        Intent intent = new Intent(FavoritesActivity.this, MovieDetailsActivity.class);
+        intent.putExtra(EXTRA_DATA, movieItem);
+        startActivity(intent);
+    }
+
 //    @Override
-//    public void onClick(MovieItem movieItem) {
-//        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-//        intent.putExtra(EXTRA_DATA, movieItem);
-//        startActivity(intent);
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        mMenu = menu;
+//        if (menu_item_checked == -1) {
+//            return true;
+//        } else {
+//            resetMenuItems();
+//            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
+//            menuItem.setChecked(true);
+//        }
+//
+//        return true;
 //    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        mMenu = menu;
-        if (menu_item_checked == -1) {
-            return true;
-        } else {
-            resetMenuItems();
-            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
-            menuItem.setChecked(true);
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        menu_item_checked = itemThatWasClickedId;
-        resetMenuItems();
-        if (itemThatWasClickedId == R.id.action_sort_popular) {
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(POPULAR, "1");
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_sort_top) {
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(TOP_RATED, "1");
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_favorites) {
-            endpoint = FAVORITES;
-            item.setChecked(true);
-            getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void resetMenuItems() {
-        for (int i = 0; i < mMenu.size(); i++)
-            mMenu.getItem(i).setChecked(false);
-    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//        menu_item_checked = itemThatWasClickedId;
+//        resetMenuItems();
+//        if (itemThatWasClickedId == R.id.action_sort_popular) {
+//            item.setChecked(true);
+//            mMoviesAdapter.clearList();
+//            rvMovies.scrollToPosition(0);
+//            getMoviesList(POPULAR, "1");
+//            return true;
+//        } else if (itemThatWasClickedId == R.id.action_sort_top) {
+//            item.setChecked(true);
+//            mMoviesAdapter.clearList();
+//            rvMovies.scrollToPosition(0);
+//            getMoviesList(TOP_RATED, "1");
+//            return true;
+//        } else if (itemThatWasClickedId == R.id.action_favorites) {
+//            endpoint = FAVORITES;
+//            item.setChecked(true);
+//            getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    private void resetMenuItems() {
+//        for (int i = 0; i < mMenu.size(); i++)
+//            mMenu.getItem(i).setChecked(false);
+//    }
 
 
 //    @Override
