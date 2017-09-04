@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,13 +15,10 @@ import android.widget.TextView;
 
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.TrailersAdapter;
-import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMovieTrailersCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
-import com.rudainc.popularmovies.models.ReviewItem;
 import com.rudainc.popularmovies.models.TrailerItem;
 import com.rudainc.popularmovies.network.async.GetTrailerAsync;
-import com.rudainc.popularmovies.network.async.MovieListAsync;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,10 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.R.id.message;
 import static com.rudainc.popularmovies.R.id.action_favorite;
-import static com.rudainc.popularmovies.R.id.action_sort_popular;
-import static java.security.AccessController.getContext;
 
 public class MovieDetailsActivity extends BaseActivity implements TrailersAdapter.TrailersAdapterOnClickHandler, OnMovieTrailersCompleted {
 

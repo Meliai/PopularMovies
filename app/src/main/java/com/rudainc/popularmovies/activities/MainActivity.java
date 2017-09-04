@@ -22,19 +22,20 @@ import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
 import com.rudainc.popularmovies.custom_views.EndlessRecyclerOnScrollListener;
 import com.rudainc.popularmovies.database.FavoritesContract;
-import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
-import com.rudainc.popularmovies.network.async.MovieListAsync;
+import com.rudainc.popularmovies.network.BaseResponse;
+import com.rudainc.popularmovies.network.PmApiWorker;
 import com.rudainc.popularmovies.utils.ToastListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
-import static android.R.id.list;
-
-public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, OnMoviesUploadCompleted, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String MOVIE_DATA = "movie_data";
     private static final String MENU_ITEM_CHECKED = "menu_item_checked";
@@ -62,9 +63,9 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private String endpoint = POPULAR;
 
     private int menu_item_checked = -1;
-    private MovieListAsync movieListAsync;
     private int lastFirstVisiblePosition;
     private LinearLayoutManager ll;
+    private PmApiWorker mAPiWorker;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -81,10 +82,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
             ll = new GridLayoutManager(this, 3);
             rvMovies.setLayoutManager(ll);
         }
+
         initScrollListener();
         rvMovies.addOnScrollListener(mScrollListener);
         mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
+
         if (savedInstanceState != null) {
             final int pos = savedInstanceState.getInt(SCROLL_POSITION);
             new Handler().postDelayed(new Runnable() {
@@ -98,20 +101,38 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
                 getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
                 endpoint = FAVORITES;
             } else
-                callAsync(savedInstanceState.getString(MOVIE_DATA),1);
+                getMoviesList(savedInstanceState.getString(MOVIE_DATA), "1");
 
         } else
-            callAsync(endpoint,1);
-
+            getMoviesList(endpoint, "1");
 
         loadAds();
     }
+
+
+    private void getMoviesList(String endpoint, String page) {
+        PmApiWorker.getInstance().getMovies(endpoint, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<BaseResponse>() {
+                    @Override
+                    public void call(final BaseResponse baseResponse) {
+                        mMoviesAdapter.updateMoviesList(baseResponse.getResults());
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+
+                    }
+                });
+    }
+
 
     private void initScrollListener() {
         mScrollListener = new EndlessRecyclerOnScrollListener(ll) {
             @Override
             public void onLoadMore(int current_page, boolean isFullyLoaded) {
-                Log.i("PAGE", current_page+""+ isFullyLoaded);
+                Log.i("PAGE", current_page + "" + isFullyLoaded);
                 if (!isFullyLoaded) {
                     getData(current_page);
                 }
@@ -122,13 +143,13 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     private void getData(int page) {
 //        if (page != 1)
 //            new Handler().post(() -> mMoviesAdapter.addPaginationFooter(null, ""));
-        Log.i("PAGE", page+"");
-            mScrollListener.setCurrent_page(page);
-            callAsync(endpoint, page);
+        Log.i("PAGE", page + "");
+        mScrollListener.setCurrent_page(page);
+        getMoviesList(endpoint, String.valueOf(page));
     }
 
-    private void loadAds(){
-        mAdView.setAdListener( new ToastListener(this));
+    private void loadAds() {
+        mAdView.setAdListener(new ToastListener(this));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -164,11 +185,15 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         resetMenuItems();
         if (itemThatWasClickedId == R.id.action_sort_popular) {
             item.setChecked(true);
-            callAsync(POPULAR,1);
+            mMoviesAdapter.clearList();
+           rvMovies.scrollToPosition(0);
+            getMoviesList(POPULAR, "1");
             return true;
         } else if (itemThatWasClickedId == R.id.action_sort_top) {
             item.setChecked(true);
-            callAsync(TOP_RATED,1);
+            mMoviesAdapter.clearList();
+            rvMovies.scrollToPosition(0);
+            getMoviesList(TOP_RATED, "1");
             return true;
         } else if (itemThatWasClickedId == R.id.action_favorites) {
             endpoint = FAVORITES;
@@ -185,30 +210,6 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
             mMenu.getItem(i).setChecked(false);
     }
 
-    private void callAsync(String url_endpoint, int page) {
-        endpoint = url_endpoint;
-
-        if (isOnline(this)) {
-            movieListAsync = new MovieListAsync(this, url_endpoint, this, page);
-            movieListAsync.execute();
-        } else
-            showSnackBar(getString(R.string.smth_went_wrong), true);
-    }
-
-    @Override
-    public void onMoviesUploadCompleted(ArrayList<MovieItem> moviesData, boolean isFullyLoaded) {
-        if (moviesData != null) {
-            mScrollListener.setFullyLoaded(isFullyLoaded);
-            mMoviesAdapter.updateMoviesList(moviesData);
-           // mMoviesAdapter.setMoviesData(moviesData);
-        } else
-            showSnackBar(getString(R.string.smth_went_wrong), true);
-    }
-
-    @Override
-    public void onMoviesUploadError(String message) {
-        showSnackBar(message, true);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -254,7 +255,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        mMoviesAdapter.clearList();
         mMoviesAdapter.setMoviesData(getAllFavoritesMovies(data));
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         rvMovies.smoothScrollToPosition(mPosition);

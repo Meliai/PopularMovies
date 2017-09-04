@@ -20,9 +20,8 @@ import butterknife.BindView;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private final Context context;
-    private ArrayList<MovieItem> mMoviesData;
+    private ArrayList<MovieItem> mMoviesData = new ArrayList<>();
 
-    private final List<MovieItem> items = new ArrayList<>();
 
     private final MoviesAdapterOnClickHandler mClickHandler;
     private Cursor mCursor;
@@ -70,6 +69,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     public void onBindViewHolder(MoviesAdapterViewHolder moviesAdapterViewHolder, int position) {
         MovieItem movieItem = mMoviesData.get(position);
         Picasso.with(context).load("http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(moviesAdapterViewHolder.mPoster);
+
     }
 
     @Override
@@ -80,6 +80,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
 
     public void setMoviesData(ArrayList<MovieItem> moviesData) {
+        this.mMoviesData.clear();
         mMoviesData = moviesData;
         notifyDataSetChanged();
     }
@@ -90,10 +91,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
 
-
     public void updateMoviesList(List<MovieItem> list) {
-//        this.items.clear();
         this.mMoviesData.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void clearList() {
+        this.mMoviesData.clear();
         notifyDataSetChanged();
     }
 }

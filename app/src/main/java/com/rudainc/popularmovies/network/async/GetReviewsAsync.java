@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 
 import com.rudainc.popularmovies.BuildConfig;
 import com.rudainc.popularmovies.interfaces.OnMovieReviewsCompleted;
-import com.rudainc.popularmovies.interfaces.OnMoviesUploadCompleted;
-import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.ReviewItem;
 import com.rudainc.popularmovies.network.MoviesDBJsonUtils;
 import com.rudainc.popularmovies.network.NetworkUtils;

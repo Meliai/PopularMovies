@@ -3,6 +3,7 @@ package com.rudainc.popularmovies.custom_views;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 public abstract class EndlessRecyclerOnScrollListener extends
         RecyclerView.OnScrollListener {
@@ -36,18 +37,31 @@ public abstract class EndlessRecyclerOnScrollListener extends
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        visibleItemCount = recyclerView.getChildCount();
-        totalItemCount = layoutManager.getItemCount();
-        firstVisibleItem = layoutManager instanceof LinearLayoutManager ? ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition():((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
-        if (!loading && totalItemCount > 0
-                && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-            // End has been reached
+//        visibleItemCount = recyclerView.getChildCount();
+//        totalItemCount = layoutManager.getItemCount();
+//        firstVisibleItem = layoutManager instanceof LinearLayoutManager ? ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition():((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
+//
+//        Log.i("WHAT????", loading +"   "+ totalItemCount +"   "+ (totalItemCount - visibleItemCount) +"  " + firstVisibleItem + visibleThreshold);
+//
+//        if (!loading && totalItemCount > 0
+//                && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+//            // End has been reached
+//
+//            // Do something
+//            current_page++;
+//            onLoadMore(current_page, isFullyLoaded);
+//
+//            loading = true;
+//        }
 
-            // Do something
+        visibleItemCount = layoutManager.getChildCount();
+        totalItemCount = layoutManager.getItemCount();
+        int pastVisiblesItems = ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
+
+        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+            //bottom of recyclerview
             current_page++;
             onLoadMore(current_page, isFullyLoaded);
-
-            loading = true;
         }
     }
 

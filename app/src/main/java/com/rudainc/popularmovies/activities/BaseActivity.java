@@ -16,6 +16,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.ads.MobileAds;
@@ -26,6 +27,9 @@ import com.rudainc.popularmovies.database.FavoritesDbHelper;
 import com.rudainc.popularmovies.models.MovieItem;
 
 import java.util.ArrayList;
+
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -45,6 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, getResources().getString(R.string.app_id_ads));
+        mSubscription = new CompositeSubscription();
     }
 
     public ArrayList<MovieItem> getAllFavoritesMovies(Cursor cursor) {
@@ -57,6 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 //                null,
 //                FavoritesContract.MovieEntry.COLUMN_MOVIE_ID
 //        );
+
+
         ArrayList<MovieItem> mArrayList = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
@@ -67,6 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                             cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_RATE)),
                                             cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_DATE))));
         }
+        Log.i("MYDB", mArrayList.size()+"");
         return mArrayList;
     }
 
@@ -130,4 +138,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         return (netInfo != null && netInfo.isConnected());
     }
 
+
+    protected CompositeSubscription mSubscription;
+
+
+
+
+
+    public void unsubscribeSubscription() {
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+            mSubscription = new CompositeSubscription();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unsubscribeSubscription();
+    }
 }
