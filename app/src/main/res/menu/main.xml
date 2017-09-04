@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_sort_popular"
-        android:orderInCategory="1"
-        android:title="@string/sort_popular"
         android:checkable="true"
-        android:checked="true"/>
+        android:checked="true"
+        android:orderInCategory="1"
+        android:title="@string/sort_popular" />
     <item
         android:id="@+id/action_sort_top"
-        android:orderInCategory="1"
-        android:title="@string/sort_top"
         android:checkable="true"
+        android:orderInCategory="1"
         android:saveEnabled="true"
-       />
+        android:title="@string/sort_top" />
     <item
         android:id="@+id/action_favorites"
+        android:icon="@drawable/ic_star"
         android:orderInCategory="1"
         android:title="@string/favorite"
-        android:checkable="true"
-        android:saveEnabled="true"
-        />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -27,18 +27,14 @@ import com.rudainc.popularmovies.network.BaseResponse;
 import com.rudainc.popularmovies.network.PmApiWorker;
 import com.rudainc.popularmovies.utils.ToastListener;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+public class FavoritesActivity extends BaseActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final String MOVIE_DATA = "movie_data";
-    private static final String MENU_ITEM_CHECKED = "menu_item_checked";
     private static final String SCROLL_POSITION = "scroll_position";
     private static final String EXTRA_DATA = "data";
 
@@ -72,6 +68,8 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getSupportLoaderManager().initLoader(ID_LOADER, null, this);
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ll = new GridLayoutManager(this, 2);
@@ -83,7 +81,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
         initScrollListener();
         rvMovies.addOnScrollListener(mScrollListener);
-        mMoviesAdapter = new MoviesAdapter(this, this);
+//        mMoviesAdapter = new MoviesAdapter(this, this);
         rvMovies.setAdapter(mMoviesAdapter);
 
         if (savedInstanceState != null) {
@@ -94,12 +92,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
                     rvMovies.scrollToPosition(pos);
                 }
             }, 200);
-            menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
-            if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
-                getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
-                endpoint = FAVORITES;
-            } else
-                getMoviesList(savedInstanceState.getString(MOVIE_DATA), "1");
+//            menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
+//            if (savedInstanceState.getString(MOVIE_DATA).equals(FAVORITES)) {
+//                getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI, null);
+//                endpoint = FAVORITES;
+//            } else
+//                getMoviesList(savedInstanceState.getString(MOVIE_DATA), "1");
 
         } else
             getMoviesList(endpoint, "1");
@@ -154,12 +152,12 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
 
     }
 
-    @Override
-    public void onClick(MovieItem movieItem) {
-        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-        intent.putExtra(EXTRA_DATA, movieItem);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onClick(MovieItem movieItem) {
+//        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+//        intent.putExtra(EXTRA_DATA, movieItem);
+//        startActivity(intent);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,7 +182,7 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
         if (itemThatWasClickedId == R.id.action_sort_popular) {
             item.setChecked(true);
             mMoviesAdapter.clearList();
-           rvMovies.scrollToPosition(0);
+            rvMovies.scrollToPosition(0);
             getMoviesList(POPULAR, "1");
             return true;
         } else if (itemThatWasClickedId == R.id.action_sort_top) {
@@ -209,15 +207,72 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     }
 
 
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(MOVIE_DATA, endpoint);
+//        outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
+//        if (ll != null)
+//            lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
+//        outState.putInt(SCROLL_POSITION, lastFirstVisiblePosition);
+//
+//    }
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(MOVIE_DATA, endpoint);
-        outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
-        if (ll != null)
-            lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
-        outState.putInt(SCROLL_POSITION, lastFirstVisiblePosition);
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
+
+
+        switch (loaderId) {
+
+            case ID_LOADER:
+                /* URI for all rows of weather data in our weather table */
+                Uri movieQueryUri = FavoritesContract.MovieEntry.CONTENT_URI;
+                /* Sort order: Ascending by date */
+                String sortOrder = FavoritesContract.MovieEntry.COLUMN_MOVIE_ID + " ASC";
+                /*
+                 * A SELECTION in SQL declares which rows you'd like to return. In our case, we
+                 * want all weather data from today onwards that is stored in our weather table.
+                 * We created a handy method to do that in our WeatherEntry class.
+                 */
+
+
+                return new CursorLoader(this,
+                        movieQueryUri,
+                        null,
+                        null,
+                        null,
+                        sortOrder);
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mMoviesAdapter.clearList();
+        mMoviesAdapter.setMoviesData(getAllFavoritesMovies(data));
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        rvMovies.smoothScrollToPosition(mPosition);
 
     }
 
+    /**
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     * The application should at this point remove any references it has to the Loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        /*
+         * Since this Loader's data is now invalid, we need to clear the Adapter that is
+         * displaying the data.
+         */
+        mMoviesAdapter.swapCursor(null);
+    }
+
 }
+
+
