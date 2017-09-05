@@ -16,7 +16,7 @@
         android:title="@string/sort_top" />
     <item
         android:id="@+id/action_favorites"
-        android:icon="@drawable/ic_star"
+        android:icon="@drawable/ic_favorite_list"
         android:orderInCategory="1"
         android:title="@string/favorite"
         app:showAsAction="ifRoom" />
