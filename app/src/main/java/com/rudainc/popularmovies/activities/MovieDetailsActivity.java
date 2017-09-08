@@ -65,7 +65,12 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
 
     @OnClick(R.id.fab_share)
     void share() {
-
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        String image = "http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path();
+        String app_link = "https://play.google.com/store/apps/details?id=com.rudainc.popularmovies&hl=en";
+        intent.putExtra(Intent.EXTRA_TEXT, "What do you think about \""+movieItem.getOriginal_title()+"\"?"+"\nFound this movie in the app\n"+app_link );
+        startActivity(Intent.createChooser(intent, "Share with"));
     }
 
     TrailersAdapter mTrailerAdapter;
