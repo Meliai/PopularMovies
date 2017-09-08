@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/space16">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:id="@+id/relativeLayout">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_user_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:civ_border_width="15dp"
+            app:civ_border_color="@color/colorBlue"
+            android:src="@drawable/transparent_squere"
+            />
+
+        <TextView
+            android:id="@+id/tv_username_initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+    </RelativeLayout>
     <TextView
         android:id="@+id/tv_reviews_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="NAME NAME NAME NAME"
         android:textStyle="bold"
-        android:layout_margin="@dimen/space16"/>
+        android:layout_margin="@dimen/space16"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/relativeLayout"
+        app:layout_constraintTop_toTopOf="@+id/relativeLayout"
+        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+        />
     <TextView
         android:id="@+id/tv_reviews_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="NAME NAME NAME NAME"
-        android:layout_marginStart="@dimen/space32"/>
-</LinearLayout>
+        android:layout_marginStart="@dimen/space16"
+        android:layout_marginTop="@dimen/space16"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintLeft_toLeftOf="parent" />
+</android.support.constraint.ConstraintLayout>

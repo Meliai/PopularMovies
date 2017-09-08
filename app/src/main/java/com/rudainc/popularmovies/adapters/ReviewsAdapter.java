@@ -1,7 +1,10 @@
 package com.rudainc.popularmovies.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +15,13 @@ import com.rudainc.popularmovies.models.ReviewItem;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsAdapterViewHolder> {
 
     private final Context context;
     private ArrayList<ReviewItem> mReviewsData;
-
 
     public ReviewsAdapter(Context context) {
         this.context = context;
@@ -28,11 +33,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
         private TextView mReviewsAuthor;
         private TextView mReviewsContent;
+        private CircleImageView mUserImage;
+        private TextView mUserInitials;
 
         public ReviewsAdapterViewHolder(View view) {
             super(view);
             mReviewsAuthor = (TextView) view.findViewById(R.id.tv_reviews_author);
             mReviewsContent = (TextView) view.findViewById(R.id.tv_reviews_content);
+            mUserImage = (CircleImageView)view.findViewById(R.id.iv_user_image);
+            mUserInitials = (TextView) view.findViewById(R.id.tv_username_initials);
         }
     }
 
@@ -52,6 +61,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
         ReviewItem reviewItem = mReviewsData.get(position);
         reviewsAdapterViewHolder.mReviewsAuthor.setText(reviewItem.getAuthor());
         reviewsAdapterViewHolder.mReviewsContent.setText(reviewItem.getContent());
+        reviewsAdapterViewHolder.mUserInitials.setText(reviewItem.getAuthor().charAt(0)+"");
+
+        int[] colors = context.getResources().getIntArray(R.array.review);
+
+        reviewsAdapterViewHolder.mUserImage.setBorderColor(ContextCompat.getColor(context,R.color.colorOrange));
     }
 
     @Override

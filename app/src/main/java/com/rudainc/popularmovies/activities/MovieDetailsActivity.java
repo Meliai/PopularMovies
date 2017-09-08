@@ -63,6 +63,11 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         startActivity(intent);
     }
 
+    @OnClick(R.id.fab_share)
+    void share() {
+
+    }
+
     TrailersAdapter mTrailerAdapter;
     private GetTrailerAsync getTrailerAsync;
 
