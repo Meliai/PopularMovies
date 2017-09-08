@@ -19,7 +19,7 @@
             android:id="@+id/tv_origin_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorCyan"
+            android:background="@color/colorPrimary"
             android:padding="@dimen/space32"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_24"
@@ -156,7 +156,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@android:drawable/ic_menu_share"
-        app:backgroundTint="@color/colorOrange"
+        app:backgroundTint="@color/colorAccent"
         app:elevation="4dp"
         android:layout_gravity="bottom|right|end"
         />
