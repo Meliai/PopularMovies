@@ -125,7 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
 
     public void showSnackBar(String message, boolean isError) {
         Snackbar snackbar = initSnackBar(message);
-        snackbar.getView().setBackgroundColor(isError ? ContextCompat.getColor(this, R.color.colorRed) : ContextCompat.getColor(this, R.color.colorGreen));
+        snackbar.getView().setBackgroundColor(isError ? ContextCompat.getColor(this, R.color.colorRed) : ContextCompat.getColor(this, R.color.colorPrimary));
 
         if (snackbar != null)
             snackbar.show();

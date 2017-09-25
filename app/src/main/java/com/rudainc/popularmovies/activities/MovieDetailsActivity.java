@@ -3,13 +3,17 @@ package com.rudainc.popularmovies.activities;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,7 +73,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         intent.setType("text/plain");
         String image = "http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path();
         String app_link = "https://play.google.com/store/apps/details?id=com.rudainc.popularmovies&hl=en";
-        intent.putExtra(Intent.EXTRA_TEXT, "What do you think about \""+movieItem.getOriginal_title()+"\"?"+"\nFound this movie in the app\n"+app_link );
+        intent.putExtra(Intent.EXTRA_TEXT, "What do you think about \"" + movieItem.getOriginal_title() + "\"?" + "\nFound this movie in the app\n" + app_link);
         startActivity(Intent.createChooser(intent, "Share with"));
     }
 
@@ -83,6 +87,14 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_details));
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Slide slide = new Slide(Gravity.BOTTOM);
+//            slide.addTarget(R.id.overview);
+//            slide.setInterpolator(AnimationUtils.loadInterpolator(this,android.R.interpolator.linear_out_slow_in));
+//            slide.setDuration(500);
+//            getWindow().setEnterTransition(slide);
+        }
+
         movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 
         fillData(movieItem);
@@ -95,7 +107,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
             getTrailerAsync = new GetTrailerAsync(this, movieItem.getId(), this);
             getTrailerAsync.execute();
         } else
-            showSnackBar(getString(R.string.smth_went_wrong),true);
+            showSnackBar(getString(R.string.smth_went_wrong), true);
     }
 
     private void fillData(MovieItem movieItem) {
@@ -115,7 +127,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
                 setNoTrailerUI(getResources().getString(R.string.no_trailers));
             mTrailerAdapter.setTrailerData(trailerData);
         } else {
-            showSnackBar(getString(R.string.smth_went_wrong),true);
+            showSnackBar(getString(R.string.smth_went_wrong), true);
             setNoTrailerUI(getResources().getString(R.string.cant_upload_data));
         }
     }
@@ -128,7 +140,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
 
     @Override
     public void onMovieTrailersError(String message) {
-        showSnackBar(message,true);
+        showSnackBar(message, true);
         setNoTrailerUI(getResources().getString(R.string.cant_upload_data));
     }
 
@@ -148,7 +160,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details, menu);
-        if(checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+        if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
             MenuItem menuItem = (MenuItem) menu.getItem(0);
             menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
         }
@@ -160,15 +172,15 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         int itemThatWasClickedId = item.getItemId();
 
         if (itemThatWasClickedId == action_favorite) {
-            if(!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))){
+            if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
                 addMovie(movieItem);
                 item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
-                showSnackBar(getResources().getString(R.string.favorite_added),false);
+                showSnackBar(getResources().getString(R.string.favorite_added), false);
 
-            }else {
+            } else {
                 removeMovie(String.valueOf(movieItem.getId()));
                 item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
-                showSnackBar(getResources().getString(R.string.favorite_removed),false);
+                showSnackBar(getResources().getString(R.string.favorite_removed), false);
 
             }
 

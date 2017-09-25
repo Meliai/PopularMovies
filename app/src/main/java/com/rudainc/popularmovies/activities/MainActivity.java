@@ -1,5 +1,6 @@
 package com.rudainc.popularmovies.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -142,10 +144,20 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     }
 
     @Override
-    public void onClick(MovieItem movieItem) {
+    public void onClick(MovieItem movieItem, ImageView view) {
         Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
         intent.putExtra(EXTRA_DATA, movieItem);
-        startActivity(intent);
+
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = ActivityOptions
+                    .makeSceneTransitionAnimation(this,view,view.getTransitionName())
+                    .toBundle();
+            startActivity(intent,bundle);
+        }else
+            startActivity(intent);
+
     }
 
     @Override

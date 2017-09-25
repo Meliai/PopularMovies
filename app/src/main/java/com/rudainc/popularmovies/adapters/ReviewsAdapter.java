@@ -65,7 +65,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
         int[] colors = context.getResources().getIntArray(R.array.review);
 
-        reviewsAdapterViewHolder.mUserImage.setBorderColor(ContextCompat.getColor(context,R.color.colorOrange));
+        reviewsAdapterViewHolder.mUserImage.setBorderColor(ContextCompat.getColor(context,R.color.colorAccent));
     }
 
     @Override

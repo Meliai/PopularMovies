@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -104,7 +105,7 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onClick(MovieItem movieItem) {
+    public void onClick(MovieItem movieItem, ImageView view) {
         Intent intent = new Intent(FavoritesActivity.this, MovieDetailsActivity.class);
         intent.putExtra(EXTRA_DATA, movieItem);
         startActivity(intent);

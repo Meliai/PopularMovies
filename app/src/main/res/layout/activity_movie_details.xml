@@ -38,6 +38,7 @@
             android:contentDescription="@string/movie_poster"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_origin_title"
+            android:transitionName="@string/poster_transition"
              />
 
         <TextView

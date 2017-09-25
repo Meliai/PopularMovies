@@ -27,7 +27,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private Cursor mCursor;
 
     public interface MoviesAdapterOnClickHandler {
-        void onClick(MovieItem movieItem);
+        void onClick(MovieItem movieItem, ImageView view);
     }
 
 
@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             MovieItem movieItem = mMoviesData.get(adapterPosition);
-            mClickHandler.onClick(movieItem);
+            mClickHandler.onClick(movieItem, (ImageView) v);
         }
     }
 
