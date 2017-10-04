@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -24,6 +27,7 @@ import com.rudainc.popularmovies.utils.ToastListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,6 +48,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
@@ -103,6 +108,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Log.i("MainActivity","favorites");
             changeFragment(new FavoritesFragment());
         } else if (id == R.id.nav_ads) {
+               Answers.getInstance().logCustom(new CustomEvent("Open Ads via NavMenu"));
             Log.i("MainActivity","ads");
             mInterstitialAd.show();
         } else if (id == R.id.nav_info) {
@@ -115,7 +121,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void loadInAds() {
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.inter_ads_menu));
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {

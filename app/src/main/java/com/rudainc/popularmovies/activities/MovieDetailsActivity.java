@@ -17,6 +17,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ShareEvent;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.TrailersAdapter;
 import com.rudainc.popularmovies.interfaces.OnMovieTrailersCompleted;
@@ -69,6 +71,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
 
     @OnClick(R.id.fab_share)
     void share() {
+        Answers.getInstance().logShare(new ShareEvent());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         String image = "http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path();

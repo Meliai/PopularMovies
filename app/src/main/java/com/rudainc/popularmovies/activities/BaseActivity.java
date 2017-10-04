@@ -6,19 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rudainc.popularmovies.R;
@@ -29,7 +26,7 @@ import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 
 import java.util.ArrayList;
 
-import rx.Subscription;
+import io.fabric.sdk.android.Fabric;
 import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseActivity extends AppCompatActivity implements PopularMoviesKeys {
@@ -43,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Fabric.with(this, new Crashlytics(), new Answers());
         FavoritesDbHelper dbHelper = new FavoritesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
 
