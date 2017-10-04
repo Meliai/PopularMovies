@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--Screens-->
     <string name="title_details">Movie Details</string>
     <string name="title_reviews">Movie Reviews</string>
@@ -35,9 +36,18 @@
 
     <!--test ads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
-  
+    <string name="cd_app_logo">App logo</string>
+    <string name="title_movies">Movies List</string>
+    <string name="communicate">Communication</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="title_info">Information</string>
+    <string name="email">y23helen@gmail.com</string>
+    <string name="contacts_info">All data in this application is provided using themoviedb.org API.\n\n
+    If you have some suggestions what will make this app better fill free to write on email.</string>
+    <string name="cd_contact">The Movie Database</string>
+
 
 </resources>

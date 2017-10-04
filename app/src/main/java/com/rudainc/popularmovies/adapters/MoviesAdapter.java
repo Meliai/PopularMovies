@@ -13,9 +13,6 @@ import com.rudainc.popularmovies.models.MovieItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
@@ -27,7 +24,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private Cursor mCursor;
 
     public interface MoviesAdapterOnClickHandler {
-        void onClick(MovieItem movieItem, ImageView view);
+        void onClick(MovieItem movieItem);
     }
 
 
@@ -50,7 +47,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             MovieItem movieItem = mMoviesData.get(adapterPosition);
-            mClickHandler.onClick(movieItem, (ImageView) v);
+            mClickHandler.onClick(movieItem);
         }
     }
 
@@ -68,7 +65,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder moviesAdapterViewHolder, int position) {
         MovieItem movieItem = mMoviesData.get(position);
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(moviesAdapterViewHolder.mPoster);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w500/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_place_holder).error(R.mipmap.ic_place_holder).into(moviesAdapterViewHolder.mPoster);
 
     }
 

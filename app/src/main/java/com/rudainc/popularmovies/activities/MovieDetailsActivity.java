@@ -86,6 +86,8 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_details));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            Slide slide = new Slide(Gravity.BOTTOM);
@@ -115,7 +117,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         mRate.setText(String.format(getString(R.string.rate), String.valueOf(movieItem.getVote_average())));
         mOverview.setText(movieItem.getOverview());
         mReleaseDate.setText(movieItem.getRelease_date().substring(0, 4));
-        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(mPoster);
+        Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_place_holder).error(R.mipmap.ic_place_holder).into(mPoster);
 
     }
 

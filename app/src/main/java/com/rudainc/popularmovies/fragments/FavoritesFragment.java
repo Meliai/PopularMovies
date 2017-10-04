@@ -1,4 +1,4 @@
-package com.rudainc.popularmovies.activities;
+package com.rudainc.popularmovies.fragments;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -6,54 +6,49 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.rudainc.popularmovies.R;
+import com.rudainc.popularmovies.activities.MainActivity;
+import com.rudainc.popularmovies.activities.MovieDetailsActivity;
 import com.rudainc.popularmovies.adapters.MoviesAdapter;
-import com.rudainc.popularmovies.custom_views.EndlessRecyclerOnScrollListener;
 import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.models.MovieItem;
-import com.rudainc.popularmovies.network.BaseResponse;
-import com.rudainc.popularmovies.network.PmApiWorker;
 import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
-import static com.rudainc.popularmovies.R.id.action_ads;
-
-public class FavoritesActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.MoviesAdapterOnClickHandler {
-
+public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.MoviesAdapterOnClickHandler, PopularMoviesKeys {
 
     private int mPosition = RecyclerView.NO_POSITION;
-
-    @BindView(R.id.my_ads_banner)
-    AdView mAdView;
 
     @BindView(R.id.rv)
     RecyclerView rvMovies;
 
+    @BindView(R.id.ll_no_data)
+    LinearLayout noData;
+
     @BindView(R.id.tv_no_data)
-    TextView noData;
+    TextView noTvData;
 
     private MoviesAdapter mMoviesAdapter;
 
@@ -61,25 +56,24 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
     private InterstitialAd mInterstitialAd;
     private int lastFirstVisiblePosition;
 
+    @Nullable
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        getSupportActionBar().setTitle(getString(R.string.title_favorite));
-        getSupportLoaderManager().initLoader(ID_LOADER, null, this);
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_movies, container, false);
+        ButterKnife.bind(this, v);
+        ((MainActivity)getActivity()).setToolbarText(getString(R.string.title_favorite));
+        getActivity().getSupportLoaderManager().initLoader(ID_LOADER, null, this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ll = new GridLayoutManager(this, 2);
+            ll = new GridLayoutManager(getActivity(), 2);
             rvMovies.setLayoutManager(ll);
         } else {
-            ll = new GridLayoutManager(this, 3);
+            ll = new GridLayoutManager(getActivity(), 3);
             rvMovies.setLayoutManager(ll);
         }
 
 
-        mMoviesAdapter = new MoviesAdapter(this, this);
+        mMoviesAdapter = new MoviesAdapter(getActivity(), this);
         rvMovies.setAdapter(mMoviesAdapter);
 
         if (savedInstanceState != null) {
@@ -92,53 +86,40 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
             }, 200);
         }
 
-        loadAdsBanner();
         loadAds();
+        return v;
     }
 
-    private void loadAdsBanner() {
-        mAdView.setAdListener(new ToastListener(this));
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-
-    }
 
     @Override
-    public void onClick(MovieItem movieItem, ImageView view) {
-        Intent intent = new Intent(FavoritesActivity.this, MovieDetailsActivity.class);
+    public void onClick(MovieItem movieItem) {
+        Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         intent.putExtra(EXTRA_DATA, movieItem);
         startActivity(intent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.reviews, menu);
+   @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.reviews, menu);
 
-        return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-
-        if (itemThatWasClickedId == action_ads) {
+        if (itemThatWasClickedId == R.id.action_ads) {
             mInterstitialAd.show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void loadAds() {
-        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd = new InterstitialAd(getActivity());
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
-        mInterstitialAd.setAdListener(new ToastListener(this) {
+        mInterstitialAd.setAdListener(new ToastListener(getActivity()) {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-
-
             }
 
         });
@@ -147,7 +128,7 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (ll != null)
             lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
@@ -162,18 +143,12 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
         switch (loaderId) {
 
             case ID_LOADER:
-                /* URI for all rows of weather data in our weather table */
+
                 Uri movieQueryUri = FavoritesContract.MovieEntry.CONTENT_URI;
-                /* Sort order: Ascending by date */
                 String sortOrder = FavoritesContract.MovieEntry.COLUMN_MOVIE_ID + " ASC";
-                /*
-                 * A SELECTION in SQL declares which rows you'd like to return. In our case, we
-                 * want all weather data from today onwards that is stored in our weather table.
-                 * We created a handy method to do that in our WeatherEntry class.
-                 */
 
 
-                return new CursorLoader(this,
+                return new CursorLoader(getActivity(),
                         movieQueryUri,
                         null,
                         null,
@@ -188,19 +163,24 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mMoviesAdapter.clearList();
-        if (!getAllFavoritesMovies(data).isEmpty())
-            mMoviesAdapter.setMoviesData(getAllFavoritesMovies(data));
+//        mMoviesAdapter.clearList();
+        if (!((MainActivity)getActivity()).getAllFavoritesMovies(data).isEmpty())
+            mMoviesAdapter.setMoviesData(((MainActivity)getActivity()).getAllFavoritesMovies(data));
         else {
             rvMovies.setVisibility(View.GONE);
-            noData.setText(getResources().getString(R.string.no_favorite));
+            noTvData.setText(getResources().getString(R.string.no_favorite));
             noData.setVisibility(View.VISIBLE);
-//            noData.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
         }
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         rvMovies.smoothScrollToPosition(mPosition);
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getContext().getContentResolver().notifyChange(FavoritesContract.MovieEntry.CONTENT_URI,null);
+    }
+
 
     /**
      * Called when a previously created loader is being reset, and thus making its data unavailable.
@@ -210,13 +190,8 @@ public class FavoritesActivity extends BaseActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        /*
-         * Since this Loader's data is now invalid, we need to clear the Adapter that is
-         * displaying the data.
-         */
         mMoviesAdapter.swapCursor(null);
     }
-
 }
 
 

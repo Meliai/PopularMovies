@@ -13,4 +13,10 @@
 
     <!--Images-->
     <dimen name="icons_24">24dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="space48">48dp</dimen>
 </resources>

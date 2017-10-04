@@ -48,6 +48,8 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(getString(R.string.title_reviews));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         MovieItem movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 

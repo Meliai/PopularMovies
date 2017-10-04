@@ -1,141 +1,75 @@
 package com.rudainc.popularmovies.activities;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.rudainc.popularmovies.R;
-import com.rudainc.popularmovies.adapters.MoviesAdapter;
-import com.rudainc.popularmovies.custom_views.EndlessRecyclerOnScrollListener;
-import com.rudainc.popularmovies.database.FavoritesContract;
-import com.rudainc.popularmovies.models.MovieItem;
-import com.rudainc.popularmovies.network.BaseResponse;
-import com.rudainc.popularmovies.network.PmApiWorker;
-import com.rudainc.popularmovies.utils.PopularMoviesKeys;
+import com.rudainc.popularmovies.fragments.FavoritesFragment;
+import com.rudainc.popularmovies.fragments.InfoFragment;
+import com.rudainc.popularmovies.fragments.MoviesFragment;
 import com.rudainc.popularmovies.utils.ToastListener;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
-public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
-
-    private int mPosition = RecyclerView.NO_POSITION;
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.my_ads_banner)
     AdView mAdView;
 
-    @BindView(R.id.rv)
-    RecyclerView rvMovies;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
 
-    private MoviesAdapter mMoviesAdapter;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
-    private EndlessRecyclerOnScrollListener mScrollListener;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    private Menu mMenu;
-    private String endpoint = POPULAR;
-    private ArrayList<MovieItem> movies;
-
-    private int menu_item_checked = -1;
-    private int lastFirstVisiblePosition;
-    private LinearLayoutManager ll;
-    private PmApiWorker mAPiWorker;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ll = new GridLayoutManager(this, 2);
-            rvMovies.setLayoutManager(ll);
-        } else {
-            ll = new GridLayoutManager(this, 3);
-            rvMovies.setLayoutManager(ll);
-        }
+        navigationView.getMenu().getItem(0).setChecked(true);
+        if (savedInstanceState == null)
+            changeFragment(new MoviesFragment());
 
-        initScrollListener();
-        rvMovies.addOnScrollListener(mScrollListener);
-        mMoviesAdapter = new MoviesAdapter(this, this);
-        rvMovies.setAdapter(mMoviesAdapter);
-
-        if (savedInstanceState != null) {
-            final int pos = savedInstanceState.getInt(SCROLL_POSITION);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    rvMovies.scrollToPosition(pos);
-                }
-            }, 200);
-            menu_item_checked = savedInstanceState.getInt(MENU_ITEM_CHECKED);
-            mMoviesAdapter.updateMoviesList(savedInstanceState.<MovieItem>getParcelableArrayList(MOVIE_DATA));
-            endpoint = savedInstanceState.getString(MOVIE_ENDPOINT);
-
-        } else
-            getMoviesList(endpoint, "1");
-
+        navigationView.setNavigationItemSelectedListener(this);
         loadAds();
+        loadInAds();
     }
 
-
-    private void getMoviesList(String endpoint, String page) {
-        PmApiWorker.getInstance().getMovies(endpoint, page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<BaseResponse>() {
-                    @Override
-                    public void call(final BaseResponse baseResponse) {
-                        mMoviesAdapter.updateMoviesList(baseResponse.getResults());
-                        movies = mMoviesAdapter.getMoviesData();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-
-                    }
-                });
+    public void setToolbarText(String title) {
+        toolbar.setTitle(title);
+//        getSupportActionBar().setTitle(title);
     }
 
+//    public void showMenu() {
+//        toolbar.showOverflowMenu();
+//    }
 
-    private void initScrollListener() {
-        mScrollListener = new EndlessRecyclerOnScrollListener(ll) {
-            @Override
-            public void onLoadMore(int current_page, boolean isFullyLoaded) {
-                Log.i("PAGE", current_page + "" + isFullyLoaded);
-                if (!isFullyLoaded) {
-                    getData(current_page);
-                }
-            }
-        };
-    }
-
-    private void getData(int page) {
-        Log.i("PAGE", page + "");
-        mScrollListener.setCurrent_page(page);
-        getMoviesList(endpoint, String.valueOf(page));
-    }
 
     private void loadAds() {
         mAdView.setAdListener(new ToastListener(this));
@@ -144,79 +78,76 @@ public class MainActivity extends BaseActivity implements MoviesAdapter.MoviesAd
     }
 
     @Override
-    public void onClick(MovieItem movieItem, ImageView view) {
-        Intent intent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-        intent.putExtra(EXTRA_DATA, movieItem);
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.i("MainActivity","tap");
+        if (id == R.id.nav_movies) {
+            Log.i("MainActivity","movies");
+            changeFragment(new MoviesFragment());
+        } else if (id == R.id.nav_favorites) {
+            Log.i("MainActivity","favorites");
+            changeFragment(new FavoritesFragment());
+        } else if (id == R.id.nav_ads) {
+            Log.i("MainActivity","ads");
+            mInterstitialAd.show();
+        } else if (id == R.id.nav_info) {
+            Log.i("MainActivity","info");
+            changeFragment(new InfoFragment());
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Bundle bundle = ActivityOptions
-                    .makeSceneTransitionAnimation(this,view,view.getTransitionName())
-                    .toBundle();
-            startActivity(intent,bundle);
-        }else
-            startActivity(intent);
+    private void loadInAds() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
 
+            }
+
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void changeFragment(Fragment fragment) {
+        if (getSupportFragmentManager().findFragmentByTag(fragment.getClass().getName()) == null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, fragment.getClass().getName()).commit();
+        else
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    getSupportFragmentManager().findFragmentByTag(fragment.getClass().getName()),
+                    fragment.getClass().getName()).commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        mMenu = menu;
-        if (menu_item_checked == -1) {
-            return true;
-        } else {
-            resetMenuItems();
-            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
-            menuItem.setChecked(true);
-        }
-
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        menu_item_checked = itemThatWasClickedId;
-        if (itemThatWasClickedId == R.id.action_sort_popular) {
-            resetMenuItems();
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(POPULAR, "1");
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_sort_top) {
-            resetMenuItems();
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(TOP_RATED, "1");
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_favorites) {
-            startActivity(new Intent(MainActivity.this, FavoritesActivity.class));
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item); // important line
     }
 
-    private void resetMenuItems() {
-        for (int i = 0; i < mMenu.size(); i++)
-            mMenu.getItem(i).setChecked(false);
-    }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(MOVIE_ENDPOINT, endpoint);
-        outState.putParcelableArrayList(MOVIE_DATA, movies);
-        outState.putInt(MENU_ITEM_CHECKED, menu_item_checked);
-        if (ll != null)
-            lastFirstVisiblePosition = ll.findFirstVisibleItemPosition();
-        outState.putInt(SCROLL_POSITION, lastFirstVisiblePosition);
-
-    }
 
 }

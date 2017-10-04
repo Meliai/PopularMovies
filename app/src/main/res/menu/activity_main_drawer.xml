@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_movies"
+            android:icon="@drawable/ic_dashboard_black_48dp"
+            android:title="@string/title_movies" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_list"
+            android:title="@string/favorite" />
+
+    </group>
+
+    <item android:title="@string/communicate">
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_ads"
+                android:icon="@drawable/ic_spa_black_48dp"
+                android:title="@string/ads" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_announcement_black_48dp"
+                android:title="@string/title_info" />
+        </group>
+    </item>
+
+</menu>

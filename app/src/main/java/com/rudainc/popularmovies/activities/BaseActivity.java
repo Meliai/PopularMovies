@@ -158,4 +158,10 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
         super.onDestroy();
         unsubscribeSubscription();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }
