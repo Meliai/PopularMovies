@@ -14,8 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rudainc.popularmovies.R;
@@ -26,7 +24,6 @@ import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 
 import java.util.ArrayList;
 
-import io.fabric.sdk.android.Fabric;
 import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseActivity extends AppCompatActivity implements PopularMoviesKeys {
@@ -36,11 +33,11 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     private SQLiteDatabase mDb;
     private FirebaseAnalytics mFirebaseAnalytics;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics(), new Answers());
+        //commented during testing
+//        Fabric.with(this, new Crashlytics(), new Answers());
         FavoritesDbHelper dbHelper = new FavoritesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
 
@@ -48,20 +45,10 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         MobileAds.initialize(this, getResources().getString(R.string.app_id_ads));
         mSubscription = new CompositeSubscription();
+
     }
 
     public ArrayList<MovieItem> getAllFavoritesMovies(Cursor cursor) {
-//        Cursor cursor = mDb.query(
-//                FavoritesContract.MovieEntry.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                FavoritesContract.MovieEntry.COLUMN_MOVIE_ID
-//        );
-
-
         ArrayList<MovieItem> mArrayList = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
@@ -75,9 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
         Log.i("MYDB", mArrayList.size()+"");
         return mArrayList;
     }
-
-
-
 
     public void addMovie(MovieItem movieItem) {
         ContentValues cv = new ContentValues();
@@ -138,10 +122,6 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
 
 
     protected CompositeSubscription mSubscription;
-
-
-
-
 
     public void unsubscribeSubscription() {
         if (!mSubscription.isUnsubscribed()) {

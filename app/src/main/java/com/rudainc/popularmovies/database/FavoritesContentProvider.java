@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 
 public class FavoritesContentProvider extends ContentProvider {
 
-
     public static final int CODE = 100;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -30,7 +29,6 @@ public class FavoritesContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-
         mFavoriteDbHelper = new FavoritesDbHelper(getContext());
         return true;
     }
@@ -46,8 +44,6 @@ public class FavoritesContentProvider extends ContentProvider {
                 int rowsInserted = 0;
                 try {
                     for (ContentValues value : values) {
-
-
                         long _id = db.insert(FavoritesContract.MovieEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             rowsInserted++;
@@ -76,19 +72,17 @@ public class FavoritesContentProvider extends ContentProvider {
 
         Cursor cursor;
 
-
         switch (sUriMatcher.match(uri)) {
 
             case CODE: {
                 cursor = mFavoriteDbHelper.getReadableDatabase().query(
-                       FavoritesContract.MovieEntry.TABLE_NAME,
+                        FavoritesContract.MovieEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
                         null,
                         null,
                         sortOrder);
-
                 break;
             }
 
@@ -114,7 +108,7 @@ public class FavoritesContentProvider extends ContentProvider {
 
             case CODE:
                 numRowsDeleted = mFavoriteDbHelper.getWritableDatabase().delete(
-                       FavoritesContract.MovieEntry.TABLE_NAME,
+                        FavoritesContract.MovieEntry.TABLE_NAME,
                         selection,
                         selectionArgs);
 
@@ -135,7 +129,7 @@ public class FavoritesContentProvider extends ContentProvider {
 
     @Override
     public String getType(@NonNull Uri uri) {
-        throw new RuntimeException("We are not implementing getType in Sunshine.");
+        throw new RuntimeException("We are not implementing getType in Popular Movies.");
     }
 
 

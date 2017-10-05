@@ -7,15 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
-    tools:context="com.rudainc.popularmovies.activities.MainActivity">
+    tools:context="com.rudainc.popularmovies.activities.MainActivity"
+    tools:openDrawer="start">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-       >
+        android:background="@color/colorWhite">
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -27,8 +27,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-               />
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/text_size_24"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/action"
+                        android:layout_width="@dimen/icons_24"
+                        android:layout_height="@dimen/icons_24"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/space16"
+                        android:src="@drawable/ic_filter_list_black_48dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -37,19 +61,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/my_ads_banner"
-            android:layout_below="@+id/appBarLayout"/>
+            android:layout_below="@+id/appBarLayout" />
 
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/my_ads_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/my_ads_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
 
 
     </RelativeLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

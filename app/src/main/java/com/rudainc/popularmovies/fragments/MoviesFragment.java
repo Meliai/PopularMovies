@@ -1,6 +1,5 @@
 package com.rudainc.popularmovies.fragments;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,11 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -65,20 +63,12 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
     private LinearLayoutManager ll;
     private PmApiWorker mAPiWorker;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, v);
-
         ((MainActivity) getActivity()).setToolbarText(getString(R.string.title_movies));
-//        ((MainActivity)getActivity()).showMenu();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ll = new GridLayoutManager(getActivity(), 2);
@@ -87,6 +77,8 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
             ll = new GridLayoutManager(getActivity(), 3);
             rvMovies.setLayoutManager(ll);
         }
+
+        endpoint = getArguments().getString(FILTER);
 
         initScrollListener();
         rvMovies.addOnScrollListener(mScrollListener);
@@ -153,57 +145,51 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
     public void onClick(MovieItem movieItem) {
         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
         intent.putExtra(EXTRA_DATA, movieItem);
-//
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            Bundle bundle = ActivityOptions
-//                    .makeSceneTransitionAnimation(getActivity(),view,view.getTransitionName())
-//                    .toBundle();
-//            startActivity(intent,bundle);
-//        }else
         startActivity(intent);
-
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_movies, menu);
-        Log.i("MovieFragment", "oncreatemenu");
-        mMenu = menu;
-        if (menu_item_checked != -1) {
-            resetMenuItems();
-            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
-            menuItem.setChecked(true);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
-    public void resetMenuItems() {
-        for (int i = 0; i < mMenu.size(); i++)
-            mMenu.getItem(i).setChecked(false);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        menu_item_checked = itemThatWasClickedId;
-        if (itemThatWasClickedId == R.id.action_sort_popular) {
-            resetMenuItems();
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(POPULAR, "1");
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_sort_top) {
-            resetMenuItems();
-            item.setChecked(true);
-            mMoviesAdapter.clearList();
-            rvMovies.scrollToPosition(0);
-            getMoviesList(TOP_RATED, "1");
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_movies, menu);
+//        Log.i("MovieFragment", "oncreatemenu");
+//        mMenu = menu;
+//        if (menu_item_checked != -1) {
+//            resetMenuItems();
+//            MenuItem menuItem = (MenuItem) menu.findItem(menu_item_checked);
+//            menuItem.setChecked(true);
+//        }
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
+//
+//    public void resetMenuItems() {
+//        for (int i = 0; i < mMenu.size(); i++)
+//            mMenu.getItem(i).setChecked(false);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//        menu_item_checked = itemThatWasClickedId;
+//        if (itemThatWasClickedId == R.id.action_sort_popular) {
+//            resetMenuItems();
+//            item.setChecked(true);
+//            mMoviesAdapter.clearList();
+//            rvMovies.scrollToPosition(0);
+//            getMoviesList(POPULAR, "1");
+//            return true;
+//        } else if (itemThatWasClickedId == R.id.action_sort_top) {
+//            resetMenuItems();
+//            item.setChecked(true);
+//            mMoviesAdapter.clearList();
+//            rvMovies.scrollToPosition(0);
+//            getMoviesList(TOP_RATED, "1");
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     @Override
@@ -218,4 +204,11 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
 
     }
 
+    public static Fragment newInstance(String filter) {
+        MoviesFragment myFragment = new MoviesFragment();
+        Bundle args = new Bundle();
+        args.putString(FILTER, filter);
+        myFragment.setArguments(args);
+        return myFragment;
+    }
 }

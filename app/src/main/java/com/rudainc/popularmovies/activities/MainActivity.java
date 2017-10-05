@@ -7,12 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.ads.AdListener;
@@ -23,13 +26,13 @@ import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.fragments.FavoritesFragment;
 import com.rudainc.popularmovies.fragments.InfoFragment;
 import com.rudainc.popularmovies.fragments.MoviesFragment;
+import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, PopularMoviesKeys {
 
     @BindView(R.id.my_ads_banner)
     AdView mAdView;
@@ -43,7 +46,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.title)
+    TextView mToolbarTitle;
+
+    @BindView(R.id.action)
+    ImageView mAction;
+
     private InterstitialAd mInterstitialAd;
+    private PopupMenu popup;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,23 +68,65 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toggle.syncState();
 
         navigationView.getMenu().getItem(0).setChecked(true);
-        if (savedInstanceState == null)
-            changeFragment(new MoviesFragment());
-
         navigationView.setNavigationItemSelectedListener(this);
+
         loadAds();
         loadInAds();
+
+        if (savedInstanceState == null) {
+            changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
+            showFilter();
+        }
+    }
+
+    public void showFilter() {
+        mAction.setVisibility(View.VISIBLE);
+        mAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Creating the instance of PopupMenu
+                popup = new PopupMenu(MainActivity.this, mAction);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater()
+                        .inflate(R.menu.menu_movies, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+
+
+                        Log.i("MovieFragments", item.getTitle().equals(getString(R.string.sort_popular)) + "");
+                        if (item.getTitle().equals(getString(R.string.sort_popular))) {
+
+//                            resetMenuItems();
+                            item.setChecked(true);
+                            changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
+                            return true;
+                        } else if (item.getTitle().equals(getString(R.string.sort_top))) {
+
+//                            resetMenuItems();
+                            item.setChecked(true);
+                            changeFragment(MoviesFragment.newInstance(TOP_RATED),TAG_MOVIE_TOP_RATED);
+                            return true;
+                        }
+
+                        return false;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+            }
+        });
+    }
+
+    public void resetMenuItems() {
+        for (int i = 0; i < popup.getMenu().size(); i++)
+            popup.getMenu().getItem(i).setChecked(false);
     }
 
     public void setToolbarText(String title) {
-        toolbar.setTitle(title);
-//        getSupportActionBar().setTitle(title);
+        mToolbarTitle.setText(title);
     }
-
-//    public void showMenu() {
-//        toolbar.showOverflowMenu();
-//    }
-
 
     private void loadAds() {
         mAdView.setAdListener(new ToastListener(this));
@@ -84,7 +136,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -92,32 +144,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        Log.i("MainActivity","tap");
-        if (id == R.id.nav_movies) {
-            Log.i("MainActivity","movies");
-            changeFragment(new MoviesFragment());
-        } else if (id == R.id.nav_favorites) {
-            Log.i("MainActivity","favorites");
-            changeFragment(new FavoritesFragment());
-        } else if (id == R.id.nav_ads) {
-               Answers.getInstance().logCustom(new CustomEvent("Open Ads via NavMenu"));
-            Log.i("MainActivity","ads");
-            mInterstitialAd.show();
-        } else if (id == R.id.nav_info) {
-            Log.i("MainActivity","info");
-            changeFragment(new InfoFragment());
+        switch (id) {
+            case R.id.nav_movies:
+                changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
+                showFilter();
+                break;
+            case R.id.nav_favorites:
+                changeFragment(new FavoritesFragment(),TAG_FAVORITE);
+                break;
+            case R.id.nav_ads:
+                Answers.getInstance().logCustom(new CustomEvent(getString(R.string.ce_open_ads)));
+                mInterstitialAd.show();
+                break;
+            case R.id.nav_info:
+                changeFragment(new InfoFragment(),TAG_INFO);
+                break;
+            default:
+                changeFragment(new MoviesFragment(),TAG_MOVIES_POPULAR);
+                break;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void changeFragment(Fragment fragment, String tag) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, tag).commit();
+    }
+
 
     private void loadInAds() {
         mInterstitialAd = new InterstitialAd(this);
@@ -133,27 +191,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
     }
-
-    private void changeFragment(Fragment fragment) {
-        if (getSupportFragmentManager().findFragmentByTag(fragment.getClass().getName()) == null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, fragment.getClass().getName()).commit();
-        else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    getSupportFragmentManager().findFragmentByTag(fragment.getClass().getName()),
-                    fragment.getClass().getName()).commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item); // important line
-    }
-
-
 }
