@@ -5,7 +5,6 @@
     <item
         android:id="@+id/action_sort_popular"
         android:checkable="true"
-        android:checked="true"
         android:orderInCategory="1"
         android:title="@string/sort_popular"
         />
@@ -13,7 +12,6 @@
         android:id="@+id/action_sort_top"
         android:checkable="true"
         android:orderInCategory="1"
-        android:saveEnabled="true"
         android:title="@string/sort_top" />
 
 </menu>

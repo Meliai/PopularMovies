@@ -47,9 +47,9 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
-        getSupportActionBar().setTitle(getString(R.string.title_reviews));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setTitle(getString(R.string.title_reviews));
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         MovieItem movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 

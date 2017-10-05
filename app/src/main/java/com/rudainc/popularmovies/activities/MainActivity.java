@@ -1,10 +1,12 @@
 package com.rudainc.popularmovies.activities;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.PopupMenu;
@@ -23,11 +25,17 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.rudainc.popularmovies.R;
+import com.rudainc.popularmovies.adapters.ViewPagerAdapter;
+import com.rudainc.popularmovies.custom_views.NavigationItem;
+import com.rudainc.popularmovies.custom_views.NavigationTabBar;
 import com.rudainc.popularmovies.fragments.FavoritesFragment;
 import com.rudainc.popularmovies.fragments.InfoFragment;
 import com.rudainc.popularmovies.fragments.MoviesFragment;
 import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,11 +54,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.title)
-    TextView mToolbarTitle;
+//    @BindView(R.id.title)
+//    TextView mToolbarTitle;
 
-    @BindView(R.id.action)
-    ImageView mAction;
+//    @BindView(R.id.action)
+//    ImageView mAction;
+
+    @BindView(R.id.tabbar)
+    NavigationTabBar mNavigationTabBar;
+
+    @BindView(R.id.view_pager)
+    ViewPager mViewPager;
 
     private InterstitialAd mInterstitialAd;
     private PopupMenu popup;
@@ -72,52 +86,45 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         loadAds();
         loadInAds();
-
+        initViewPager();
+        initTopBar();
         if (savedInstanceState == null) {
             changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
-            showFilter();
+//            showFilter();
         }
     }
 
-    public void showFilter() {
-        mAction.setVisibility(View.VISIBLE);
-        mAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Creating the instance of PopupMenu
-                popup = new PopupMenu(MainActivity.this, mAction);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                        .inflate(R.menu.menu_movies, popup.getMenu());
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-
-
-                        Log.i("MovieFragments", item.getTitle().equals(getString(R.string.sort_popular)) + "");
-                        if (item.getTitle().equals(getString(R.string.sort_popular))) {
-
-//                            resetMenuItems();
-                            item.setChecked(true);
-                            changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
-                            return true;
-                        } else if (item.getTitle().equals(getString(R.string.sort_top))) {
-
-//                            resetMenuItems();
-                            item.setChecked(true);
-                            changeFragment(MoviesFragment.newInstance(TOP_RATED),TAG_MOVIE_TOP_RATED);
-                            return true;
-                        }
-
-                        return false;
-                    }
-                });
-
-                popup.show(); //showing popup menu
-            }
-        });
-    }
+//    public void showFilter() {
+//        mAction.setVisibility(View.VISIBLE);
+//        mAction.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Creating the instance of PopupMenu
+//                popup = new PopupMenu(MainActivity.this, mAction);
+//                //Inflating the Popup using xml file
+//                popup.getMenuInflater()
+//                        .inflate(R.menu.menu_movies, popup.getMenu());
+//
+//                //registering popup with OnMenuItemClickListener
+//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        item.setChecked(!item.isChecked());
+//                        if (item.getTitle().equals(getString(R.string.sort_popular))) {
+//                            changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
+//                            return true;
+//                        } else if (item.getTitle().equals(getString(R.string.sort_top))) {
+//                            changeFragment(MoviesFragment.newInstance(TOP_RATED),TAG_MOVIE_TOP_RATED);
+//                            return true;
+//                        }
+//
+//                        return false;
+//                    }
+//                });
+//
+//                popup.show(); //showing popup menu
+//            }
+//        });
+//    }
 
     public void resetMenuItems() {
         for (int i = 0; i < popup.getMenu().size(); i++)
@@ -125,7 +132,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     public void setToolbarText(String title) {
-        mToolbarTitle.setText(title);
+//        mToolbarTitle.setText(title);
     }
 
     private void loadAds() {
@@ -151,7 +158,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (id) {
             case R.id.nav_movies:
                 changeFragment(MoviesFragment.newInstance(POPULAR),TAG_MOVIES_POPULAR);
-                showFilter();
+//                showFilter();
                 break;
             case R.id.nav_favorites:
                 changeFragment(new FavoritesFragment(),TAG_FAVORITE);
@@ -176,6 +183,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment, tag).commit();
     }
 
+    private void initViewPager() {
+        mViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setOffscreenPageLimit(2);
+    }
+
+    private void initTopBar() {
+        mNavigationTabBar.setList(getNavigationItems());
+        mNavigationTabBar.setViewPager(mViewPager);
+    }
+
+    private List<NavigationItem> getNavigationItems() {
+        List<NavigationItem> list = new ArrayList<>();
+        TypedArray icons = getResources().obtainTypedArray(R.array.bottom_icons);
+        TypedArray iconsActive = getResources().obtainTypedArray(R.array.bottom_icons_active);
+        String[] titles = getResources().getStringArray(R.array.navigation_titles);
+        for (int i = 0; i < icons.length(); i++)
+            list.add(new NavigationItem(icons.getResourceId(i, -1), iconsActive.getResourceId(i, -1),titles[i]));
+        icons.recycle();
+        iconsActive.recycle();
+        return list;
+    }
 
     private void loadInAds() {
         mInterstitialAd = new InterstitialAd(this);

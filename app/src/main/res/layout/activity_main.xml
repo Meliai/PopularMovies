@@ -11,69 +11,84 @@
     tools:openDrawer="start">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/root"
+            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_height="0dp"
+            android:layout_weight="1"
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            >
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|enterAlways|snap">
+                    <include layout="@layout/toolbar" />
+                </android.support.v7.widget.Toolbar>
+                <com.rudainc.popularmovies.custom_views.NavigationTabBar
+                    android:id="@+id/tabbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent" />
 
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/text_size_24"
-                        android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/action"
-                        android:layout_width="@dimen/icons_24"
-                        android:layout_height="@dimen/icons_24"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/space16"
-                        android:src="@drawable/ic_filter_list_black_48dp"
-                        android:visibility="gone"/>
-                </LinearLayout>
-            </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.AppBarLayout>
 
-        </android.support.design.widget.AppBarLayout>
+            <android.support.v4.widget.Space
+                app:layout_anchor="@id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                />
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/my_ads_banner"
-            android:layout_below="@+id/appBarLayout" />
 
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                >
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+
+            </LinearLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/my_ads_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

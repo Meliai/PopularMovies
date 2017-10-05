@@ -88,9 +88,9 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
-        getSupportActionBar().setTitle(getString(R.string.title_details));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setTitle(getString(R.string.title_details));
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            Slide slide = new Slide(Gravity.BOTTOM);

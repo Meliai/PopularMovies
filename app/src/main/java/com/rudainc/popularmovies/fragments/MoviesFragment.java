@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -210,5 +208,12 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
         args.putString(FILTER, filter);
         myFragment.setArguments(args);
         return myFragment;
+    }
+
+    public static Fragment getInstance(MoviesFragment moviesFragment, String tagMoviesPopular) {
+        Bundle args = new Bundle();
+        args.putString(FILTER, tagMoviesPopular);
+        moviesFragment.setArguments(args);
+        return moviesFragment;
     }
 }

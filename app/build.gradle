@@ -63,6 +63,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.facebook.rebound:rebound:0.3.8'
 
     //Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
