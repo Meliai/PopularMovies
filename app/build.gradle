@@ -19,7 +19,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.rudainc.popularmovies"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 4
         versionName "1.4"
@@ -45,6 +45,7 @@ android {
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -57,14 +58,21 @@ dependencies {
     //UI
     compile 'com.android.support:design:26.+'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //layouts
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    //binder
     compile 'com.jakewharton:butterknife:8.4.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    //Circle Image
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    //Movies tabs bounds
     compile 'com.facebook.rebound:rebound:0.3.8'
-
+    //Search EditText Animation
+    compile('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true;
+    }
     //Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'

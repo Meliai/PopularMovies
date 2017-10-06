@@ -3,6 +3,7 @@ package com.rudainc.popularmovies.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,16 +36,19 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
     @BindView(R.id.tv_no_data)
     TextView mNoData;
 
-    @BindView(R.id.back)
-    ImageView ivBack;
+    @BindView(R.id.ads)
+    ImageView ivAds;
 
-    @OnClick(R.id.back)
-    void back() {
-        onBackPressed();
-    }
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
+
+    @OnClick(R.id.ads)
+    void showAds(){
+        mInterstitialAd.show();
+    }
 
     private ReviewsAdapter mReviewsAdapter;
 
@@ -59,9 +63,15 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
-        ivBack.setVisibility(View.VISIBLE);
+        ivAds.setVisibility(View.VISIBLE);
+
         MovieItem movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
         mToolbarTitle.setText(getString(R.string.title_reviews));
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         mReviewsAdapter = new ReviewsAdapter(this);
         rvReviews.setAdapter(mReviewsAdapter);
@@ -99,24 +109,24 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         setNoReviewsUI(getResources().getString(R.string.cant_upload_data));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.reviews, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-
-        if (itemThatWasClickedId == action_ads) {
-            mInterstitialAd.show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.reviews, menu);
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//
+//        if (itemThatWasClickedId == action_ads) {
+//            mInterstitialAd.show();
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void loadAds() {
         mInterstitialAd = new InterstitialAd(this);

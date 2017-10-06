@@ -48,10 +48,12 @@
     <string name="title_info">Information</string>
     <string name="email">y23helen@gmail.com</string>
     <string name="contacts_info">All data in this application is provided using themoviedb.org API.\n\n
-    If you have some suggestions what will make this app better fill free to write on email.</string>
+    If you have some suggestions what will make this app better, feel free to write on email.</string>
     <string name="cd_contact">The Movie Database</string>
     <string name="save">save</string>
     <string name="ce_open_ads">Open Ads via NavMenu</string>
+    <string name="no_search">No search results</string>
+    <string name="search">Search</string>
 
 
 </resources>

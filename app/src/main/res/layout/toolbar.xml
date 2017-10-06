@@ -1,51 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:ignore="ContentDescription">
 
     <ImageView
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/space16"
-        android:layout_marginStart="@dimen/space16"
+        android:paddingBottom="@dimen/space16"
+        android:paddingTop="@dimen/space16"
         android:src="@drawable/ic_spa_black_48dp"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/toolbar_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/back"
-        android:layout_toEndOf="@+id/options"/>
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/text_size_24"
+        android:textStyle="bold" />
 
 
     <LinearLayout
         android:id="@+id/options"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/space16">
+
+        <ImageView
+            android:id="@+id/toolbar_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_favorite_inactive"
+            android:visibility="gone" />
 
 
         <ImageView
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_filter_list_black_48dp" />
+            android:src="@drawable/ic_filter_list_black_48dp"
+            android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/menu"
+            android:id="@+id/ads"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/space16"
-            android:layout_marginStart="@dimen/space16"
             android:src="@drawable/ic_spa_black_48dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+           />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

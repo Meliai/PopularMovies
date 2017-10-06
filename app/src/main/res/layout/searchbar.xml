@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_centerVertical="true"
+    android:layout_margin="@dimen/space16"
+
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space16"
+    tools:ignore="RtlSymmetry,SpUsage, ContentDescription">
+    <!--android:background="@drawable/button_white_with_boarders"-->
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_spa_black_48dp" />
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorWhite"
+        android:hint="@string/search"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingStart="@dimen/space16"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_size_16" />
+    
+    <ImageView
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space16"
+        android:src="@drawable/ic_star"
+        android:visibility="invisible" />
+
+</LinearLayout>

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textStyle="bold"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorPrimaryDark"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/tv_reviews_author"

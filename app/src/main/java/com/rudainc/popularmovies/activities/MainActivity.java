@@ -1,5 +1,6 @@
 package com.rudainc.popularmovies.activities;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, PopularMoviesKeys {
 
@@ -61,8 +63,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
 
-    //    @BindView(R.id.action)
-//    ImageView mAction;
+    @OnClick(R.id.search)
+    void search() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     @BindView(R.id.vp_space)
     Space mSpace;
     @BindView(R.id.ll_movies)
@@ -121,7 +127,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void showViewPager(boolean show) {
-//        mSpace.setVisibility(show? View.VISIBLE:View.GONE);
+        mSpace.setVisibility(show? View.VISIBLE:View.GONE);
         mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
         mNavigationTabBar.setVisibility(show ? View.VISIBLE : View.GONE);
         findViewById(R.id.fragment_container).setVisibility(!show ? View.VISIBLE : View.GONE);

@@ -72,10 +72,6 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
             rvMovies.setLayoutManager(ll);
         }
 
-
-        mMoviesAdapter = new MoviesAdapter(getActivity(), this);
-        rvMovies.setAdapter(mMoviesAdapter);
-
         if (savedInstanceState != null) {
             final int pos = savedInstanceState.getInt(SCROLL_POSITION);
             new Handler().postDelayed(new Runnable() {
@@ -164,8 +160,11 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 //        mMoviesAdapter.clearList();
-        if (!((MainActivity)getActivity()).getAllFavoritesMovies(data).isEmpty())
-            mMoviesAdapter.setMoviesData(((MainActivity)getActivity()).getAllFavoritesMovies(data));
+        if (!((MainActivity)getActivity()).getAllFavoritesMovies(data).isEmpty()) {
+            mMoviesAdapter = new MoviesAdapter(getActivity(), this);
+            rvMovies.setAdapter(mMoviesAdapter);
+            mMoviesAdapter.setMoviesData(((MainActivity) getActivity()).getAllFavoritesMovies(data));
+        }
         else {
             rvMovies.setVisibility(View.GONE);
             noTvData.setText(getResources().getString(R.string.no_favorite));

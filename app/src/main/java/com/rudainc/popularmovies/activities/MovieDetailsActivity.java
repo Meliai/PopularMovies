@@ -1,12 +1,15 @@
 package com.rudainc.popularmovies.activities;
 
+import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +57,9 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @BindView(R.id.tv_no_trailers)
     TextView mNoTrailers;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private MovieItem movieItem;
 
     private static final String EXTRA_DATA = "data";
@@ -65,6 +71,21 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         startActivity(intent);
     }
 
+    @BindView(R.id.toolbar_favorite)
+    ImageView mToolbarFavorite;
+
+    @OnClick(R.id.toolbar_favorite)
+    void favorite(){
+        if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+            addMovie(movieItem);
+            mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
+            showSnackBar(getResources().getString(R.string.favorite_added), false);
+        } else {
+            removeMovie(String.valueOf(movieItem.getId()));
+            mToolbarFavorite.setImageResource(R.drawable.ic_favorite_inactive);
+            showSnackBar(getResources().getString(R.string.favorite_removed), false);
+        }
+    }
     @OnClick(R.id.back)
     void back(){
         onBackPressed();
@@ -94,9 +115,15 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
-        ivBack.setVisibility(View.VISIBLE);
-        movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
+//        ivBack.setVisibility(View.VISIBLE);
+        mToolbarFavorite.setVisibility(View.VISIBLE);
         mToolbarTitle.setText(getString(R.string.title_details));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
+
         fillData(movieItem);
 
         mRecyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
@@ -111,6 +138,9 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     }
 
     private void fillData(MovieItem movieItem) {
+        if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+            mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
+        }
         mTitle.setText(movieItem.getOriginal_title());
         mRate.setText(String.format(getString(R.string.rate), String.valueOf(movieItem.getVote_average())));
         mOverview.setText(movieItem.getOverview());
@@ -157,36 +187,36 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.details, menu);
-        if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            MenuItem menuItem = (MenuItem) menu.getItem(0);
-            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-
-        if (itemThatWasClickedId == action_favorite) {
-            if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-                addMovie(movieItem);
-                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
-                showSnackBar(getResources().getString(R.string.favorite_added), false);
-
-            } else {
-                removeMovie(String.valueOf(movieItem.getId()));
-                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
-                showSnackBar(getResources().getString(R.string.favorite_removed), false);
-
-            }
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.details, menu);
+//        if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+//            MenuItem menuItem = (MenuItem) menu.getItem(0);
+//            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int itemThatWasClickedId = item.getItemId();
+//
+//        if (itemThatWasClickedId == action_favorite) {
+//            if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+//                addMovie(movieItem);
+//                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
+//                showSnackBar(getResources().getString(R.string.favorite_added), false);
+//
+//            } else {
+//                removeMovie(String.valueOf(movieItem.getId()));
+//                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
+//                showSnackBar(getResources().getString(R.string.favorite_removed), false);
+//
+//            }
+//
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }
