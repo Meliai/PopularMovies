@@ -61,7 +61,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, v);
-        ((MainActivity)getActivity()).setToolbarText(getString(R.string.title_favorite));
+
         getActivity().getSupportLoaderManager().initLoader(ID_LOADER, null, this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

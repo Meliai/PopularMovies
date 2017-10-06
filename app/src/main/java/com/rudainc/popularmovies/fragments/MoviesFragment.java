@@ -66,7 +66,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.MoviesAdap
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, v);
-        ((MainActivity) getActivity()).setToolbarText(getString(R.string.title_movies));
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ll = new GridLayoutManager(getActivity(), 2);

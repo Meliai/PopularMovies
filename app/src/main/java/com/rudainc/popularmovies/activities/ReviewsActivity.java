@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -22,9 +23,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.rudainc.popularmovies.R.id.action_ads;
-import static com.rudainc.popularmovies.R.id.action_favorite;
 
 public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted {
 
@@ -33,6 +34,17 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
 
     @BindView(R.id.tv_no_data)
     TextView mNoData;
+
+    @BindView(R.id.back)
+    ImageView ivBack;
+
+    @OnClick(R.id.back)
+    void back() {
+        onBackPressed();
+    }
+
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
 
     private ReviewsAdapter mReviewsAdapter;
 
@@ -47,12 +59,9 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         ButterKnife.bind(this);
-//        getSupportActionBar().setTitle(getString(R.string.title_reviews));
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        ivBack.setVisibility(View.VISIBLE);
         MovieItem movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
-
+        mToolbarTitle.setText(getString(R.string.title_reviews));
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         mReviewsAdapter = new ReviewsAdapter(this);
         rvReviews.setAdapter(mReviewsAdapter);
@@ -63,7 +72,7 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         } else
             showSnackBar(getString(R.string.smth_went_wrong), true);
 
-loadAds();
+        loadAds();
     }
 
     @Override

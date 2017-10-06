@@ -3,17 +3,13 @@ package com.rudainc.popularmovies.activities;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,6 +65,16 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         startActivity(intent);
     }
 
+    @OnClick(R.id.back)
+    void back(){
+        onBackPressed();
+    }
+
+    @BindView(R.id.back)
+    ImageView ivBack;
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+
     @OnClick(R.id.fab_share)
     void share() {
         Answers.getInstance().logShare(new ShareEvent());
@@ -88,20 +94,9 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
-//        getSupportActionBar().setTitle(getString(R.string.title_details));
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Slide slide = new Slide(Gravity.BOTTOM);
-//            slide.addTarget(R.id.overview);
-//            slide.setInterpolator(AnimationUtils.loadInterpolator(this,android.R.interpolator.linear_out_slow_in));
-//            slide.setDuration(500);
-//            getWindow().setEnterTransition(slide);
-        }
-
+        ivBack.setVisibility(View.VISIBLE);
         movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
-
+        mToolbarTitle.setText(getString(R.string.title_details));
         fillData(movieItem);
 
         mRecyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));

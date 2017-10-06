@@ -19,10 +19,10 @@
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/root"
-            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:fitsSystemWindows="true"
 
             >
 
@@ -37,8 +37,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|enterAlways|snap">
+
                     <include layout="@layout/toolbar" />
                 </android.support.v7.widget.Toolbar>
+
                 <com.rudainc.popularmovies.custom_views.NavigationTabBar
                     android:id="@+id/tabbar"
                     android:layout_width="match_parent"
@@ -49,31 +51,32 @@
             </android.support.design.widget.AppBarLayout>
 
             <android.support.v4.widget.Space
-                app:layout_anchor="@id/toolbar"
+                android:id="@+id/vp_space"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                />
-
+                app:layout_anchor="@id/toolbar" />
 
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="?actionBarSize"
+                android:visibility="gone"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-                android:visibility="gone"/>
 
             <LinearLayout
-                android:orientation="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/ll_movies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                >
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent" />
 
 
             </LinearLayout>
