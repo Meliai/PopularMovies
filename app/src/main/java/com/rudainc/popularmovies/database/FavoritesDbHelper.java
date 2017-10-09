@@ -9,7 +9,7 @@ import com.rudainc.popularmovies.database.FavoritesContract.MovieEntry;
 public class FavoritesDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "favorites_movies.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_ALTER_1 = "ALTER TABLE "
             + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.IS_FAVORITE + " string;" + " ADD COLUMN " + MovieEntry.IS_PINNED + " string;";

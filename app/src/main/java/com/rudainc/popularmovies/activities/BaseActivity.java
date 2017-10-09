@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.rudainc.popularmovies.R;
@@ -24,6 +26,7 @@ import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
 import rx.subscriptions.CompositeSubscription;
 
 public abstract class BaseActivity extends AppCompatActivity implements PopularMoviesKeys {
@@ -37,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //commented during testing
-//        Fabric.with(this, new Crashlytics(), new Answers());
+        Fabric.with(this, new Crashlytics(), new Answers());
         FavoritesDbHelper dbHelper = new FavoritesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
 

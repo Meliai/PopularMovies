@@ -35,14 +35,14 @@
 
     <!--Ads-->
     <string name="ads">Ads</string>
-    <!--<string name="banner_ad_unit_id">ca-app-pub-1227764705187744/7432401889</string>-->
-    <!--<string name="interstitial_ad_unit_id">ca-app-pub-1227764705187744/8176962751</string>-->
-    <!--<string name="inter_ads_menu">ca-app-pub-1227764705187744/7468433006</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-1227764705187744/7432401889</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-1227764705187744/8176962751</string>
+    <string name="inter_ads_menu">ca-app-pub-1227764705187744/7468433006</string>
 
     <!--test ads-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="inter_ads_menu">ca-app-pub-3940256099942544/1033173712</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
+    <!--<string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->
+    <!--<string name="inter_ads_menu">ca-app-pub-3940256099942544/1033173712</string>-->
 
     <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
     <string name="cd_app_logo">App logo</string>
