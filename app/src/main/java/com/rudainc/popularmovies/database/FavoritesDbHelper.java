@@ -12,7 +12,9 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_ALTER_1 = "ALTER TABLE "
-            + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.IS_FAVORITE + " string;" + " ADD COLUMN " + MovieEntry.IS_PINNED + " string;";
+            + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.IS_FAVORITE + " string;";
+    private static final String DATABASE_ALTER_2 = "ALTER TABLE "
+            + MovieEntry.TABLE_NAME + " ADD COLUMN " + MovieEntry.IS_PINNED + " string;";
 
 
     public FavoritesDbHelper(Context context) {
@@ -38,11 +40,9 @@ public class FavoritesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
-//        onCreate(sqLiteDatabase);
-
         if (oldVersion < 2) {
             db.execSQL(DATABASE_ALTER_1);
+            db.execSQL(DATABASE_ALTER_2);
         }
 
     }
