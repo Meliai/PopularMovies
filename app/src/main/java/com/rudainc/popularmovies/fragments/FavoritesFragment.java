@@ -94,21 +94,6 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
         startActivity(intent);
     }
 
-   @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.reviews, menu);
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_ads) {
-            mInterstitialAd.show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void loadAds() {
         mInterstitialAd = new InterstitialAd(getActivity());
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_ad_unit_id));

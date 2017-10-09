@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="colorControlNormal">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -14,12 +15,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    !-- Style to replace actionbar overflow icon. set item 'android:actionOverflowButtonStyle' in AppTheme -->
-    <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_filter_list_black_48dp</item>
-    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"> <item name="colorControlNormal">@color/colorWhite</item></style>
 
+
+    <style name="mCardView" parent="CardView">
+        <item name="cardBackgroundColor">@color/colorWhite</item>
+        <item name="cardCornerRadius">@dimen/cardview_default_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
 </resources>

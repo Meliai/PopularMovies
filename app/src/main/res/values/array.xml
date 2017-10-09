@@ -4,14 +4,14 @@
 
 
     <integer-array name="bottom_icons">
-        <item>@drawable/ic_favorite_inactive</item>
-        <item>@drawable/ic_star</item>
+        <item>@drawable/ic_movie_black</item>
+        <item>@drawable/ic_star_grey</item>
     </integer-array>
 
 
     <integer-array name="bottom_icons_active">
-        <item>@drawable/ic_favorite_active</item>
-        <item>@drawable/ic_star</item>
+        <item>@drawable/ic_movie_green</item>
+        <item>@drawable/ic_star_green</item>
     </integer-array>
 
     <string-array name="navigation_titles">

@@ -14,6 +14,7 @@ import android.support.v4.widget.Space;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -96,14 +97,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setToolbarText(getString(R.string.title_movies));
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
-
-        loadAds();
-        loadInAds();
         initViewPager();
         initTopBar();
+
         if (savedInstanceState == null) {
             changeFragment(MoviesFragment.newInstance(POPULAR), TAG_MOVIES_POPULAR);
         }
+
+        loadAds();
+        loadInAds();
+
     }
 
     public void setToolbarText(String title) {
@@ -208,4 +211,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
     }
+
 }

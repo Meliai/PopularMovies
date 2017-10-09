@@ -6,15 +6,6 @@
     android:orientation="horizontal"
     tools:ignore="ContentDescription">
 
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/space16"
-        android:paddingTop="@dimen/space16"
-        android:src="@drawable/ic_spa_black_48dp"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="0dp"
@@ -32,6 +23,13 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="@dimen/space16">
+
+        <ImageView
+            android:id="@+id/toolbar_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_pin_black"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/toolbar_favorite"
@@ -52,7 +50,7 @@
             android:id="@+id/ads"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_spa_black_48dp"
+            android:src="@drawable/ic_spa_white_24dp"
             android:visibility="gone"
            />
     </LinearLayout>

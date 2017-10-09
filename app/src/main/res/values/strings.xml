@@ -18,6 +18,8 @@
     <string name="show_reviews">Show Reviews</string>
     <string name="favorite_added">Movie Added to favorites</string>
     <string name="favorite_removed">Movie Removed from favorites</string>
+    <string name="pin_added">Movie Pinned for watching</string>
+    <string name="pin_removed">Movie Unpinned</string>
     <string name="no_favorite">Your Favorite List is empty =(</string>
 
     <!--Errors-->

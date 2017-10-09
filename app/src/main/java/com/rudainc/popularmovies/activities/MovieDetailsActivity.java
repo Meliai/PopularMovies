@@ -1,17 +1,13 @@
 package com.rudainc.popularmovies.activities;
 
-import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,8 +27,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.rudainc.popularmovies.R.id.action_favorite;
 
 public class MovieDetailsActivity extends BaseActivity implements TrailersAdapter.TrailersAdapterOnClickHandler, OnMovieTrailersCompleted {
 
@@ -60,6 +54,17 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+
+    @BindView(R.id.toolbar_favorite)
+    ImageView mToolbarFavorite;
+
+    @BindView(R.id.toolbar_pin)
+    ImageView mToolbarPin;
+
+    TrailersAdapter mTrailerAdapter;
+    private GetTrailerAsync getTrailerAsync;
     private MovieItem movieItem;
 
     private static final String EXTRA_DATA = "data";
@@ -71,11 +76,9 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         startActivity(intent);
     }
 
-    @BindView(R.id.toolbar_favorite)
-    ImageView mToolbarFavorite;
 
     @OnClick(R.id.toolbar_favorite)
-    void favorite(){
+    void favorite() {
         if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
             addMovie(movieItem);
             mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
@@ -86,15 +89,19 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
             showSnackBar(getResources().getString(R.string.favorite_removed), false);
         }
     }
-    @OnClick(R.id.back)
-    void back(){
-        onBackPressed();
-    }
 
-    @BindView(R.id.back)
-    ImageView ivBack;
-    @BindView(R.id.toolbar_title)
-    TextView mToolbarTitle;
+    @OnClick(R.id.toolbar_pin)
+    void pin() {
+        if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
+            addMovie(movieItem);
+            mToolbarPin.setImageResource(R.drawable.ic_pin_yellow);
+            showSnackBar(getResources().getString(R.string.pin_added), false);
+        } else {
+            removeMovie(String.valueOf(movieItem.getId()));
+            mToolbarPin.setImageResource(R.drawable.ic_pin_black);
+            showSnackBar(getResources().getString(R.string.pin_removed), false);
+        }
+    }
 
     @OnClick(R.id.fab_share)
     void share() {
@@ -107,20 +114,22 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         startActivity(Intent.createChooser(intent, "Share with"));
     }
 
-    TrailersAdapter mTrailerAdapter;
-    private GetTrailerAsync getTrailerAsync;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
-//        ivBack.setVisibility(View.VISIBLE);
+
         mToolbarFavorite.setVisibility(View.VISIBLE);
+        mToolbarPin.setVisibility(View.VISIBLE);
         mToolbarTitle.setText(getString(R.string.title_details));
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         movieItem = (MovieItem) getIntent().getParcelableExtra(EXTRA_DATA);
 
