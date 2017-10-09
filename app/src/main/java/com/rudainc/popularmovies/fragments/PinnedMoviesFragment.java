@@ -35,7 +35,7 @@ import com.rudainc.popularmovies.utils.ToastListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.MoviesAdapterOnClickHandler, PopularMoviesKeys {
+public class PinnedMoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MoviesAdapter.MoviesAdapterOnClickHandler, PopularMoviesKeys {
 
     private int mPosition = RecyclerView.NO_POSITION;
 
@@ -53,7 +53,8 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     private LinearLayoutManager ll;
     private InterstitialAd mInterstitialAd;
     private int lastFirstVisiblePosition;
-    String selection =  FavoritesContract.MovieEntry.IS_FAVORITE + "=?";
+//    private static final String[] PROJECTION ={FavoritesContract.MovieEntry.IS_PINNED};
+    String selection =  FavoritesContract.MovieEntry.IS_PINNED + "=?";
     private static final String[] SELECTION_ARGS ={"true"};
 
     @Nullable
@@ -147,7 +148,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 //        mMoviesAdapter.clearList();
-        Log.i(TAG_FAVORITE, data.toString() +" "+ loader.toString());
+        Log.i(TAG_PINNED, data.toString() +" "+ loader.toString());
         if (!((MainActivity)getActivity()).getAllFavoritesMovies(data).isEmpty()) {
             mMoviesAdapter = new MoviesAdapter(getActivity(), this);
             rvMovies.setAdapter(mMoviesAdapter);
@@ -155,7 +156,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
         }
         else {
             rvMovies.setVisibility(View.GONE);
-            noTvData.setText(getResources().getString(R.string.no_favorite));
+            noTvData.setText(getResources().getString(R.string.no_pinned));
             noData.setVisibility(View.VISIBLE);
         }
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;

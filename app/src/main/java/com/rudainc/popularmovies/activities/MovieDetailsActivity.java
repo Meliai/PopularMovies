@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ShareEvent;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.TrailersAdapter;
+import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMovieTrailersCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.TrailerItem;
@@ -68,6 +70,7 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     private MovieItem movieItem;
 
     private static final String EXTRA_DATA = "data";
+    private MovieItem myMovie;
 
     @OnClick(R.id.show_reviews)
     void showReviews() {
@@ -80,26 +83,40 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @OnClick(R.id.toolbar_favorite)
     void favorite() {
         if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            addMovie(movieItem);
+            addMovie(movieItem, "true", "false");
             mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
             showSnackBar(getResources().getString(R.string.favorite_added), false);
         } else {
-            removeMovie(String.valueOf(movieItem.getId()));
-            mToolbarFavorite.setImageResource(R.drawable.ic_favorite_inactive);
-            showSnackBar(getResources().getString(R.string.favorite_removed), false);
+            myMovie = getMovie(String.valueOf(movieItem.getId()));
+            if (myMovie.is_favorite().equals("false")) {
+                updateMovie(movieItem, "true", myMovie.is_pinned());
+                mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
+                showSnackBar(getResources().getString(R.string.favorite_added), false);
+            } else {
+                updateMovie(movieItem, "false", myMovie.is_pinned());
+                mToolbarFavorite.setImageResource(R.drawable.ic_favorite_inactive);
+                showSnackBar(getResources().getString(R.string.favorite_removed), false);
+            }
         }
     }
 
     @OnClick(R.id.toolbar_pin)
     void pin() {
         if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            addMovie(movieItem);
+            addMovie(movieItem, "false", "true");
             mToolbarPin.setImageResource(R.drawable.ic_pin_yellow);
             showSnackBar(getResources().getString(R.string.pin_added), false);
         } else {
-            removeMovie(String.valueOf(movieItem.getId()));
-            mToolbarPin.setImageResource(R.drawable.ic_pin_black);
-            showSnackBar(getResources().getString(R.string.pin_removed), false);
+            myMovie = getMovie(String.valueOf(movieItem.getId()));
+            if (myMovie.is_pinned().equals("false")) {
+                updateMovie(movieItem,myMovie.is_favorite(), "true");
+                mToolbarPin.setImageResource(R.drawable.ic_pin_yellow);
+                showSnackBar(getResources().getString(R.string.pin_added), false);
+            } else {
+                updateMovie(movieItem, myMovie.is_favorite(), "false");
+                mToolbarPin.setImageResource(R.drawable.ic_pin_black);
+                showSnackBar(getResources().getString(R.string.pin_removed), false);
+            }
         }
     }
 
@@ -113,7 +130,6 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
         intent.putExtra(Intent.EXTRA_TEXT, "What do you think about \"" + movieItem.getOriginal_title() + "\"?" + "\nFound this movie in the app\n" + app_link);
         startActivity(Intent.createChooser(intent, "Share with"));
     }
-
 
 
     @Override
@@ -147,8 +163,11 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     }
 
     private void fillData(MovieItem movieItem) {
+        Log.i("Movie data", movieItem.getId() + " "+ checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))+" " + movieItem.is_favorite() + " " + movieItem.is_pinned());
         if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
+            myMovie = getMovie(String.valueOf(movieItem.getId()));
+            mToolbarFavorite.setImageResource(Boolean.parseBoolean(myMovie.is_favorite())?R.drawable.ic_favorite_active:R.drawable.ic_favorite_inactive);
+            mToolbarPin.setImageResource(Boolean.parseBoolean(myMovie.is_pinned())?R.drawable.ic_pin_yellow:R.drawable.ic_pin_black);
         }
         mTitle.setText(movieItem.getOriginal_title());
         mRate.setText(String.format(getString(R.string.rate), String.valueOf(movieItem.getVote_average())));

@@ -34,6 +34,7 @@ import com.rudainc.popularmovies.custom_views.ZoomOutPageTransformer;
 import com.rudainc.popularmovies.fragments.FavoritesFragment;
 import com.rudainc.popularmovies.fragments.InfoFragment;
 import com.rudainc.popularmovies.fragments.MoviesFragment;
+import com.rudainc.popularmovies.fragments.PinnedMoviesFragment;
 import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
 
@@ -151,6 +152,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 showViewPager(false);
                 setToolbarText(getString(R.string.favorite));
                 changeFragment(new FavoritesFragment(), TAG_FAVORITE);
+                break;
+            case R.id.nav_pinned:
+                showViewPager(false);
+                setToolbarText(getString(R.string.list_watch));
+                changeFragment(new PinnedMoviesFragment(), TAG_PINNED);
                 break;
             case R.id.nav_ads:
                 Answers.getInstance().logCustom(new CustomEvent(getString(R.string.ce_open_ads)));

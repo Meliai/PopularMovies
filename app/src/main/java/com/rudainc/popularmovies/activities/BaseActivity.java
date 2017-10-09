@@ -51,19 +51,21 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     public ArrayList<MovieItem> getAllFavoritesMovies(Cursor cursor) {
         ArrayList<MovieItem> mArrayList = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-
-            mArrayList.add(new MovieItem(   cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_MOVIE_ID)),
-                                            cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_TITLE)),
-                                            cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_POSTER_PATH)),
-                                            cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_OVERVIEW)),
-                                            cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_RATE)),
-                                            cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_DATE))));
+            mArrayList.add(new MovieItem(cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_MOVIE_ID)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_TITLE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_POSTER_PATH)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_OVERVIEW)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_RATE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_DATE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_FAVORITE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_PINNED))));
         }
-        Log.i("MYDB", mArrayList.size()+"");
+        Log.i("MYDB", mArrayList.size() + "");
         return mArrayList;
     }
 
-    public void addMovie(MovieItem movieItem) {
+    public void addMovie(MovieItem movieItem, String isFavorite, String isPinned) {
+        Log.i("Movie add", movieItem.getId() + " " + isFavorite + " " + isPinned);
         ContentValues cv = new ContentValues();
         cv.put(FavoritesContract.MovieEntry.COLUMN_MOVIE_ID, movieItem.getId());
         cv.put(FavoritesContract.MovieEntry.COLUMN_TITLE, movieItem.getOriginal_title());
@@ -71,7 +73,23 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
         cv.put(FavoritesContract.MovieEntry.COLUMN_RATE, movieItem.getVote_average());
         cv.put(FavoritesContract.MovieEntry.COLUMN_OVERVIEW, movieItem.getOverview());
         cv.put(FavoritesContract.MovieEntry.COLUMN_DATE, movieItem.getRelease_date());
+        cv.put(FavoritesContract.MovieEntry.IS_FAVORITE, isFavorite);
+        cv.put(FavoritesContract.MovieEntry.IS_PINNED, isPinned);
         mDb.insert(FavoritesContract.MovieEntry.TABLE_NAME, null, cv);
+    }
+
+    public void updateMovie(MovieItem movieItem, String isFavorite, String isPinned) {
+        Log.i("Movie upgrade", movieItem.getId() + " " + isFavorite + " " + isPinned);
+
+        if (isFavorite.equals(FALSE) && isPinned.equals(FALSE))
+            removeMovie(movieItem.getId());
+        else{
+            ContentValues cv = new ContentValues();
+            cv.put(FavoritesContract.MovieEntry.IS_FAVORITE, isFavorite);
+            cv.put(FavoritesContract.MovieEntry.IS_PINNED, isPinned);
+            mDb.update(FavoritesContract.MovieEntry.TABLE_NAME, cv, FavoritesContract.MovieEntry.COLUMN_MOVIE_ID + "=" + movieItem.getId(), null);
+        }
+
     }
 
 
@@ -88,6 +106,24 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
         }
         cursor.close();
         return true;
+    }
+
+    public MovieItem getMovie(String movie_id) {
+        MovieItem movieItem = null;
+        String Query = "Select * from " + FavoritesContract.MovieEntry.TABLE_NAME + " where " + FavoritesContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movie_id;
+        Cursor cursor = mDb.rawQuery(Query, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            movieItem = new MovieItem(cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_MOVIE_ID)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_TITLE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_POSTER_PATH)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_OVERVIEW)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_RATE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.COLUMN_DATE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_FAVORITE)),
+                    cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_PINNED)));
+        }
+       cursor.close();
+       return movieItem;
     }
 
     private Snackbar initSnackBar(String message) {

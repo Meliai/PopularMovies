@@ -12,6 +12,10 @@
             android:id="@+id/nav_favorites"
             android:icon="@drawable/ic_favorite_list"
             android:title="@string/favorite" />
+        <item
+            android:id="@+id/nav_pinned"
+            android:icon="@drawable/ic_pin_black"
+            android:title="@string/list_watch" />
 
     </group>
 

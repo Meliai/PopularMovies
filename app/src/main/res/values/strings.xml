@@ -21,6 +21,8 @@
     <string name="pin_added">Movie Pinned for watching</string>
     <string name="pin_removed">Movie Unpinned</string>
     <string name="no_favorite">Your Favorite List is empty =(</string>
+    <string name="list_watch">List to watch</string>
+    <string name="no_pinned">Your List to watch is empty =(</string>
 
     <!--Errors-->
     <string name="smth_went_wrong">Something went wrong, please check your internet connection and try again!</string>

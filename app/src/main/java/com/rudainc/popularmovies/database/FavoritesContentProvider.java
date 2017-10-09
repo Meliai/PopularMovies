@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+@SuppressWarnings("ConstantConditions")
 public class FavoritesContentProvider extends ContentProvider {
 
     public static final int CODE = 100;
