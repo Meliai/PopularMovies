@@ -5,17 +5,10 @@
     android:layout_height="40dp"
     android:layout_centerVertical="true"
     android:layout_margin="@dimen/space16"
-
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/space16"
-    tools:ignore="RtlSymmetry,SpUsage, ContentDescription">
-    <!--android:background="@drawable/button_white_with_boarders"-->
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_spa_black_48dp" />
+    tools:ignore="RtlSymmetry,SpUsage">
 
     <EditText
         android:id="@+id/et_search"
@@ -30,13 +23,14 @@
         android:paddingStart="@dimen/space16"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_size_16" />
-    
+
     <ImageView
         android:id="@+id/clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space16"
         android:src="@drawable/ic_star"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:contentDescription="@string/cd_clear_search"/>
 
 </LinearLayout>

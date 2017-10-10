@@ -65,24 +65,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
 
-    @OnClick(R.id.search)
-    void search() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
-    }
-
     @BindView(R.id.vp_space)
     Space mSpace;
+
     @BindView(R.id.ll_movies)
     LinearLayout mMovies;
+
     @BindView(R.id.tabbar)
     NavigationTabBar mNavigationTabBar;
 
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
 
+    @OnClick(R.id.search)
+    void search() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     private InterstitialAd mInterstitialAd;
-    private PopupMenu popup;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -107,17 +108,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         loadAds();
         loadInAds();
-
     }
 
     public void setToolbarText(String title) {
         mToolbarTitle.setText(title);
-    }
-
-    private void loadAds() {
-        mAdView.setAdListener(new ToastListener(this));
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -201,6 +195,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         icons.recycle();
         iconsActive.recycle();
         return list;
+    }
+
+
+    private void loadAds() {
+        mAdView.setAdListener(new ToastListener(this));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void loadInAds() {

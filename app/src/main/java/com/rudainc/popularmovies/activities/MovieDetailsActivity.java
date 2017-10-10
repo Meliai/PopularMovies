@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +16,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ShareEvent;
 import com.rudainc.popularmovies.R;
 import com.rudainc.popularmovies.adapters.TrailersAdapter;
-import com.rudainc.popularmovies.database.FavoritesContract;
 import com.rudainc.popularmovies.interfaces.OnMovieTrailersCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.TrailerItem;
@@ -83,17 +81,17 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @OnClick(R.id.toolbar_favorite)
     void favorite() {
         if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            addMovie(movieItem, "true", "false");
+            addMovie(movieItem, TRUE, FALSE);
             mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
             showSnackBar(getResources().getString(R.string.favorite_added), false);
         } else {
             myMovie = getMovie(String.valueOf(movieItem.getId()));
-            if (myMovie.is_favorite().equals("false")) {
-                updateMovie(movieItem, "true", myMovie.is_pinned());
+            if (myMovie.is_favorite().equals(FALSE)) {
+                updateMovie(movieItem, TRUE, myMovie.is_pinned());
                 mToolbarFavorite.setImageResource(R.drawable.ic_favorite_active);
                 showSnackBar(getResources().getString(R.string.favorite_added), false);
             } else {
-                updateMovie(movieItem, "false", myMovie.is_pinned());
+                updateMovie(movieItem, FALSE, myMovie.is_pinned());
                 mToolbarFavorite.setImageResource(R.drawable.ic_favorite_inactive);
                 showSnackBar(getResources().getString(R.string.favorite_removed), false);
             }
@@ -103,17 +101,17 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     @OnClick(R.id.toolbar_pin)
     void pin() {
         if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-            addMovie(movieItem, "false", "true");
+            addMovie(movieItem, FALSE, TRUE);
             mToolbarPin.setImageResource(R.drawable.ic_pin_yellow);
             showSnackBar(getResources().getString(R.string.pin_added), false);
         } else {
             myMovie = getMovie(String.valueOf(movieItem.getId()));
-            if (myMovie.is_pinned().equals("false")) {
-                updateMovie(movieItem,myMovie.is_favorite(), "true");
+            if (myMovie.is_pinned().equals(FALSE)) {
+                updateMovie(movieItem, myMovie.is_favorite(), TRUE);
                 mToolbarPin.setImageResource(R.drawable.ic_pin_yellow);
                 showSnackBar(getResources().getString(R.string.pin_added), false);
             } else {
-                updateMovie(movieItem, myMovie.is_favorite(), "false");
+                updateMovie(movieItem, myMovie.is_favorite(), FALSE);
                 mToolbarPin.setImageResource(R.drawable.ic_pin_black);
                 showSnackBar(getResources().getString(R.string.pin_removed), false);
             }
@@ -163,18 +161,16 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
     }
 
     private void fillData(MovieItem movieItem) {
-        Log.i("Movie data", movieItem.getId() + " "+ checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))+" " + movieItem.is_favorite() + " " + movieItem.is_pinned());
         if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
             myMovie = getMovie(String.valueOf(movieItem.getId()));
-            mToolbarFavorite.setImageResource(Boolean.parseBoolean(myMovie.is_favorite())?R.drawable.ic_favorite_active:R.drawable.ic_favorite_inactive);
-            mToolbarPin.setImageResource(Boolean.parseBoolean(myMovie.is_pinned())?R.drawable.ic_pin_yellow:R.drawable.ic_pin_black);
+            mToolbarFavorite.setImageResource(Boolean.parseBoolean(myMovie.is_favorite()) ? R.drawable.ic_favorite_active : R.drawable.ic_favorite_inactive);
+            mToolbarPin.setImageResource(Boolean.parseBoolean(myMovie.is_pinned()) ? R.drawable.ic_pin_yellow : R.drawable.ic_pin_black);
         }
         mTitle.setText(movieItem.getOriginal_title());
         mRate.setText(String.format(getString(R.string.rate), String.valueOf(movieItem.getVote_average())));
         mOverview.setText(movieItem.getOverview());
         mReleaseDate.setText(movieItem.getRelease_date().substring(0, 4));
         Picasso.with(this).load("http://image.tmdb.org/t/p/w342/" + movieItem.getPoster_path()).placeholder(R.mipmap.ic_place_holder).error(R.mipmap.ic_place_holder).into(mPoster);
-
     }
 
 
@@ -213,38 +209,4 @@ public class MovieDetailsActivity extends BaseActivity implements TrailersAdapte
             startActivity(webIntent);
         }
     }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.details, menu);
-//        if (checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-//            MenuItem menuItem = (MenuItem) menu.getItem(0);
-//            menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemThatWasClickedId = item.getItemId();
-//
-//        if (itemThatWasClickedId == action_favorite) {
-//            if (!checkIsDataAlreadyInDBorNot(String.valueOf(movieItem.getId()))) {
-//                addMovie(movieItem);
-//                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_active));
-//                showSnackBar(getResources().getString(R.string.favorite_added), false);
-//
-//            } else {
-//                removeMovie(String.valueOf(movieItem.getId()));
-//                item.setIcon(getResources().getDrawable(R.drawable.ic_favorite_inactive));
-//                showSnackBar(getResources().getString(R.string.favorite_removed), false);
-//
-//            }
-//
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

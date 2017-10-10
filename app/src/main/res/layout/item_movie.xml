@@ -8,7 +8,7 @@
         android:id="@+id/iv_movie_poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/movie_poster"
+        android:contentDescription="@string/cd_movie_poster"
         android:adjustViewBounds="true"
-        android:transitionName="@string/poster_transition"/>
+       />
 </LinearLayout>

@@ -2,8 +2,10 @@ package com.rudainc.popularmovies.activities;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -52,11 +54,6 @@ public class SearchActivity extends BaseActivity {
 
     private EndlessRecyclerOnScrollListener mScrollListener;
 
-
-    @OnClick(R.id.back)
-    void back() {
-        onBackPressed();
-    }
 
     @OnClick(R.id.clear)
     void clearEditText() {
@@ -142,11 +139,14 @@ public class SearchActivity extends BaseActivity {
         @Override
         public void run() {
             mSearchBar.setVisibility(View.VISIBLE);
-                    animateEditText();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                animateEditText();
+            }
         }
     },600);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void animateEditText() {
         // get the center for the clipping circle
         int cx = mSearchBar.getRight();

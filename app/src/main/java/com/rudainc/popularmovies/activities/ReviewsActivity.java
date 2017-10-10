@@ -16,6 +16,7 @@ import com.rudainc.popularmovies.interfaces.OnMovieReviewsCompleted;
 import com.rudainc.popularmovies.models.MovieItem;
 import com.rudainc.popularmovies.models.ReviewItem;
 import com.rudainc.popularmovies.network.async.GetReviewsAsync;
+import com.rudainc.popularmovies.utils.PopularMoviesKeys;
 import com.rudainc.popularmovies.utils.ToastListener;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted {
+
+public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompleted, PopularMoviesKeys {
 
     @BindView(R.id.rv)
     RecyclerView rvReviews;
@@ -51,8 +53,6 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
     private GetReviewsAsync getReviewsAsync;
 
     private InterstitialAd mInterstitialAd;
-
-    private static final String EXTRA_DATA = "data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,25 +104,6 @@ public class ReviewsActivity extends BaseActivity implements OnMovieReviewsCompl
         showSnackBar(message, true);
         setNoReviewsUI(getResources().getString(R.string.cant_upload_data));
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.reviews, menu);
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int itemThatWasClickedId = item.getItemId();
-//
-//        if (itemThatWasClickedId == action_ads) {
-//            mInterstitialAd.show();
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     private void loadAds() {
         mInterstitialAd = new InterstitialAd(this);

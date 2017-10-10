@@ -23,6 +23,17 @@
     <string name="no_favorite">Your Favorite List is empty =(</string>
     <string name="list_watch">List to watch</string>
     <string name="no_pinned">Your List to watch is empty =(</string>
+    <string name="title_movies">Movies List</string>
+    <string name="communicate">Communication</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="title_info">Information</string>
+    <string name="email">y23helen@gmail.com</string>
+    <string name="contacts_info">All data in this application is provided using themoviedb.org API.\n\n
+    If you have some suggestions what will make this app better, feel free to write on email.</string>
+    <string name="save">save</string>
+    <string name="no_search">No search results</string>
+    <string name="search">Search</string>
+    <string name="ads">Ads</string>
 
     <!--Errors-->
     <string name="smth_went_wrong">Something went wrong, please check your internet connection and try again!</string>
@@ -31,10 +42,21 @@
     <string name="poster_transition">poster transition</string>
 
     <!--Content Description-->
-    <string name="movie_poster">Movie Poster</string>
+    <string name="cd_app_logo">App logo</string>
+    <string name="cd_movie_poster">Movie Poster</string>
+    <string name="cd_rate_star">Rate star</string>
+    <string name="cd_image_ghost">Ghost image</string>
+    <string name="cd_src_trailer">trailer item image</string>
+    <string name="cd_clear_search">Clear search icon</string>
+    <string name="cd_pin">Pin movie icon</string>
+    <string name="cd_favorite">Make movie favorite description</string>
+    <string name="cd_ads">Advertising</string>
+    <string name="cd_search">Search movie</string>
+    <string name="cd_contact">The Movie Database</string>
 
     <!--Ads-->
-    <string name="ads">Ads</string>
+    <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
+    <!--Real ads-->
     <string name="banner_ad_unit_id">ca-app-pub-1227764705187744/7432401889</string>
     <string name="interstitial_ad_unit_id">ca-app-pub-1227764705187744/8176962751</string>
     <string name="inter_ads_menu">ca-app-pub-1227764705187744/7468433006</string>
@@ -44,20 +66,7 @@
     <!--<string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->
     <!--<string name="inter_ads_menu">ca-app-pub-3940256099942544/1033173712</string>-->
 
-    <string name="app_id_ads">ca-app-pub-1227764705187744~6269641254</string>
-    <string name="cd_app_logo">App logo</string>
-    <string name="title_movies">Movies List</string>
-    <string name="communicate">Communication</string>
-    <string name="title_contacts">Contacts</string>
-    <string name="title_info">Information</string>
-    <string name="email">y23helen@gmail.com</string>
-    <string name="contacts_info">All data in this application is provided using themoviedb.org API.\n\n
-    If you have some suggestions what will make this app better, feel free to write on email.</string>
-    <string name="cd_contact">The Movie Database</string>
-    <string name="save">save</string>
+    <!--Custom Events in Fabric-->
     <string name="ce_open_ads">Open Ads via NavMenu</string>
-    <string name="no_search">No search results</string>
-    <string name="search">Search</string>
-
 
 </resources>

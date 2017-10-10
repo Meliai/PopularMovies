@@ -11,11 +11,12 @@ public interface PopularMoviesKeys {
     String POPULAR = "popular";
     String TOP_RATED = "top_rated";
     String FILTER = "filter";
+
     String FALSE = "false";
     String TRUE = "true";
 
     int ID_LOADER_FAVORITES = 44;
-    int ID_LOADER_PINNED = 55;
+
 
 //  Fragment Tags
 

@@ -16,20 +16,13 @@
             android:id="@+id/nav_pinned"
             android:icon="@drawable/ic_pin_black"
             android:title="@string/list_watch" />
-
+        <item
+            android:id="@+id/nav_ads"
+            android:icon="@drawable/ic_spa_black_48dp"
+            android:title="@string/ads" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_announcement_black_48dp"
+            android:title="@string/title_info" />
     </group>
-
-    <item android:title="@string/communicate">
-        <group android:checkableBehavior="single">
-            <item
-                android:id="@+id/nav_ads"
-                android:icon="@drawable/ic_spa_black_48dp"
-                android:title="@string/ads" />
-            <item
-                android:id="@+id/nav_info"
-                android:icon="@drawable/ic_announcement_black_48dp"
-                android:title="@string/title_info" />
-        </group>
-    </item>
-
 </menu>

@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
@@ -63,12 +62,10 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
                     cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_FAVORITE)),
                     cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_PINNED))));
         }
-        Log.i("MYDB", mArrayList.size() + "");
         return mArrayList;
     }
 
     public void addMovie(MovieItem movieItem, String isFavorite, String isPinned) {
-        Log.i("Movie add", movieItem.getId() + " " + isFavorite + " " + isPinned);
         ContentValues cv = new ContentValues();
         cv.put(FavoritesContract.MovieEntry.COLUMN_MOVIE_ID, movieItem.getId());
         cv.put(FavoritesContract.MovieEntry.COLUMN_TITLE, movieItem.getOriginal_title());
@@ -82,11 +79,9 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     }
 
     public void updateMovie(MovieItem movieItem, String isFavorite, String isPinned) {
-        Log.i("Movie upgrade", movieItem.getId() + " " + isFavorite + " " + isPinned);
-
         if (isFavorite.equals(FALSE) && isPinned.equals(FALSE))
             removeMovie(movieItem.getId());
-        else{
+        else {
             ContentValues cv = new ContentValues();
             cv.put(FavoritesContract.MovieEntry.IS_FAVORITE, isFavorite);
             cv.put(FavoritesContract.MovieEntry.IS_PINNED, isPinned);
@@ -125,8 +120,8 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
                     cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_FAVORITE)),
                     cursor.getString(cursor.getColumnIndex(FavoritesContract.MovieEntry.IS_PINNED)));
         }
-       cursor.close();
-       return movieItem;
+        cursor.close();
+        return movieItem;
     }
 
     private Snackbar initSnackBar(String message) {

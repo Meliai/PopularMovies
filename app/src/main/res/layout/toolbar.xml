@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:orientation="horizontal"
-    tools:ignore="ContentDescription">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/toolbar_title"
@@ -28,16 +26,18 @@
             android:id="@+id/toolbar_pin"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_pin_black"
             android:layout_marginEnd="@dimen/space8"
-            android:visibility="gone" />
+            android:src="@drawable/ic_pin_black"
+            android:visibility="gone"
+            android:contentDescription="@string/cd_pin"/>
 
         <ImageView
             android:id="@+id/toolbar_favorite"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_favorite_inactive"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/cd_favorite"/>
 
 
         <ImageView
@@ -45,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_filter_list_black_48dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/cd_search"/>
 
         <ImageView
             android:id="@+id/ads"
@@ -53,6 +54,6 @@
             android:layout_height="match_parent"
             android:src="@drawable/ic_spa_white_24dp"
             android:visibility="gone"
-           />
+            android:contentDescription="@string/cd_ads"/>
     </LinearLayout>
 </LinearLayout>

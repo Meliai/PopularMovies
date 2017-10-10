@@ -86,6 +86,7 @@
             android:id="@+id/my_ads_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id" />
 
@@ -98,8 +99,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:visibility="visible"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer"
-        android:visibility="gone"/>
+        app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

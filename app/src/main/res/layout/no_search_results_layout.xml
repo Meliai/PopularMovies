@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:visibility="gone"
-    tools:ignore="ContentDescription, SpUsage">
+    tools:ignore="SpUsage,UseCompoundDrawables">
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
@@ -17,14 +17,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-
-        android:orientation="vertical">
+        android:orientation="vertical"
+       >
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_ghost" />
+            android:src="@drawable/ic_ghost"
+            android:contentDescription="@string/cd_image_ghost"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,8 +33,7 @@
             android:layout_gravity="center"
             android:text="@string/no_search"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/text_size_16"
-            />
+            android:textSize="@dimen/text_size_16" />
 
     </LinearLayout>
 
