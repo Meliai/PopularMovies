@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@color/colorWhite"
     tools:context="com.rudainc.popularmovies.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -38,7 +38,7 @@
         android:layout_margin="@dimen/space16"
         android:gravity="center"
         android:text="@string/cant_upload_data"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_size_20"
         android:visibility="gone" />
 </RelativeLayout>

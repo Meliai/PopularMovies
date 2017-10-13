@@ -97,7 +97,7 @@ public class NavigationTabBar extends FrameLayout {
 
     private void addUnderline() {
         underline = new View(getContext());
-        underline.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        underline.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         LayoutParams layoutParams = new LayoutParams(PixelUtil.getScreenWidth(getContext()) / list.size(), PixelUtil.dpToPx(getContext(), 3));
         layoutParams.gravity = Gravity.BOTTOM;
         addView(underline, layoutParams);
@@ -134,7 +134,7 @@ public class NavigationTabBar extends FrameLayout {
         TextView textView = new TextView(getContext());
         textView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+        textView.setTextColor(ContextCompat.getColor(getContext(),R.color.colorWhite));
         textView.setText(title);
         textView.setTextSize(12);
         textView.setVisibility(GONE);

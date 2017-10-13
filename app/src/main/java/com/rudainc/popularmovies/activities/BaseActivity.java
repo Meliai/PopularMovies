@@ -79,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements PopularM
     }
 
     public void updateMovie(MovieItem movieItem, String isFavorite, String isPinned) {
-        if (isFavorite.equals(FALSE) && isPinned.equals(FALSE))
+         if (isFavorite.equals(FALSE) && isPinned.equals(FALSE))
             removeMovie(movieItem.getId());
         else {
             ContentValues cv = new ContentValues();

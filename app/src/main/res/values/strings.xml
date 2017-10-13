@@ -7,8 +7,8 @@
     <string name="title_details">Movie Details</string>
     <string name="title_reviews">Movie Reviews</string>
     <string name="title_favorite">Favorite List</string>
-    <string name="sort_top">Top Rate</string>
-    <string name="sort_popular">Popular Video</string>
+    <string name="sort_top">Top Rated</string>
+    <string name="sort_popular">Popular Movies</string>
     <string name="favorite">Favorites</string>
     <string name="rate" formatted="false">%s/10</string>
     <string name="trailer">Trailers</string>
@@ -21,7 +21,7 @@
     <string name="pin_added">Movie Pinned for watching</string>
     <string name="pin_removed">Movie Unpinned</string>
     <string name="no_favorite">Your Favorite List is empty =(</string>
-    <string name="list_watch">List to watch</string>
+    <string name="list_watch">Movies to watch</string>
     <string name="no_pinned">Your List to watch is empty =(</string>
     <string name="title_movies">Movies List</string>
     <string name="communicate">Communication</string>

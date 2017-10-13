@@ -10,8 +10,8 @@
 
 
     <integer-array name="bottom_icons_active">
-        <item>@drawable/ic_movie_green</item>
-        <item>@drawable/ic_star_green</item>
+        <item>@drawable/ic_movie_yellow</item>
+        <item>@drawable/ic_star_yellow</item>
     </integer-array>
 
     <string-array name="navigation_titles">
